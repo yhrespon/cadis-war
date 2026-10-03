@@ -15,7 +15,7 @@ Trois défauts de source ont été corrigés pendant l’audit :
 2. Le mannequin de prévisualisation du menu montrait son dos à la caméra.
 3. Le filtre du OneShot était limité aux chemins animés dans `idle` (9 articulations seulement) ; surtout, la sous-machine `shoot/reload` n’avait pas de sortie vers `End`, et le OneShot restait actif même après la fin du clip. Le masque couvre désormais tout le sous-arbre `Spine` (22 os) et les clips d’action quittent automatiquement leur sous-machine.
 
-**Limites importantes :** les séquences interactives, le tir/calibrage du réticule, les armes en main, les missions, l’IA/collisions des PNJ, root motion prolongé et les parcours Android n’ont pas été validés intégralement. L’export local de l’APK est bloqué par l’absence d’Android SDK et de chemin Java SDK valide. Le workflow GitHub a été corrigé dans la v13 ; son exécution et son APK sont à confirmer dans le compte GitHub.
+**Limites importantes :** les séquences interactives, le tir/calibrage du réticule, les armes en main, les missions, l’IA/collisions des PNJ, root motion prolongé et les parcours Android n’ont pas été validés intégralement. L’export local de l’APK est bloqué par l’absence d’Android SDK et de chemin Java SDK valide. Le premier run GitHub a passé contrôles statiques/import mais a échoué sur le message du renderer dummy ; le filtre a été corrigé et un second run est à obtenir.
 
 ## 2. Contrôles automatisés exécutés
 
@@ -82,7 +82,8 @@ Le clip `shoot` a été testé au niveau de son état et de sa terminaison. La p
 - Version du preset Android mise à **version code 13 / version name 0.13.0**.
 - Le workflow n’ignore plus les codes de retour de l’import (`|| true` supprimé), et la vérification regroupe import et démarrage en cherchant les erreurs de parse, chargement et déclaration/type.
 - Injection des champs de keystore release via Python plutôt que `sed` avec délimiteur `@` ; un `@` dans le mot de passe ne casse donc plus le remplacement. Les secrets n’ont pas été fournis ou imprimés par cette modification.
-- Le workflow n’a pas encore été exécuté dans cette étape d’audit ; la réussite de l’APK GitHub reste une preuve à obtenir avant de prétendre qu’un APK est livré.
+- Run GitHub Actions `37125564277` sur le commit de remplacement : statique et import des ressources réussis ; l’étape de démarrage a échoué uniquement sur `ERROR: Parameter "m" is null.` émis par le renderer dummy sans affichage, pas sur une erreur GDScript. L’export APK a donc été sauté.
+- Le filtre CI a été corrigé pour distinguer ces erreurs renderer des erreurs de parse/chargement. Le rerun après ce correctif reste à valider avant de déclarer un APK compilé.
 
 ## 4. Assertion des dix modèles
 
@@ -126,7 +127,7 @@ Le moniteur du processus physique total reste sous le seuil mentionné de 4 ms p
 | Pause, reprise et retour menu | [À CORRIGER — NON TESTÉ] | Ouvrir pause depuis jeu et voiture ; vérifier contrôles et absence d’inputs bloqués. |
 | Paramètres, équipement et recoloration visibles | [À CORRIGER — NON TESTÉ] | Vérifier le résultat visuel du changement de palette/équipement. |
 | Touches mobiles, zones sûres, encoche et ratio d’écran | [BLOQUÉ — APPAREIL REQUIS] | Tester sur Android réel, dimensions et orientation cible. |
-| Export/installation APK Android | [BLOQUÉ — SDK LOCAL ABSENT] | L’export local a échoué : voir section 7 ; l’APK CI peut fournir une voie de remplacement si le workflow réussit. |
+| Export/installation APK Android | [BLOQUÉ — SDK LOCAL ABSENT / CI EN RELANCE] | L’export local a échoué : voir section 7 ; un premier run CI s’est arrêté avant export sur le faux positif renderer, rerun en attente. |
 | Profilage mobile et LOD réel | [BLOQUÉ — APPAREIL REQUIS] | Rejouer la scène et profiler le CPU/GPU sur l’appareil cible. |
 
 ## 7. Export APK local — blocage

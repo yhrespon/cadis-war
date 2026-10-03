@@ -25,8 +25,9 @@ Variables reconnues par Godot 4.3 : `GODOT_ANDROID_KEYSTORE_DEBUG_PATH|USER|PASS
 
 - Push/PR : contrôles statiques et données, import des ressources, chargement des scripts, export Android debug et artefact `cadis_wars-debug-apk`.
 - Tag `v*` ou lancement manuel `release=true` : export release, secrets requis : `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_USER` (alias) et `RELEASE_KEYSTORE_PASSWORD`.
-- Le workflow v13 échoue maintenant si l’import échoue (l’erreur n’est plus masquée par `|| true`) et contrôle aussi les messages d’import et de chargement. L’injection des champs de keystore utilise Python afin que les valeurs contenant `@` ne cassent pas la modification du preset.
-- L’exécution de ce workflow n’est pas encore confirmée ; l’image `barichello/godot-ci:4.3`, ses chemins JDK/SDK/templates et l’artefact restent à valider par une exécution GitHub réelle.
+- Le workflow échoue maintenant si l’import échoue (l’erreur n’est plus masquée par `|| true`) et contrôle les messages de parse/chargement. L’injection des champs de keystore utilise Python pour que les valeurs contenant `@` ne cassent pas le preset.
+- Run 37125564277 : contrôles statiques, installation des templates et import réussis ; la vérification de démarrage a interrompu le job à cause du message renderer dummy `ERROR: Parameter "m" is null.` (pas d’erreur GDScript), donc l’export n’a pas été tenté. Le filtre a été ajusté et le rerun est en attente.
+- L’artefact APK ne sera annoncé comme livré qu’après réussite du rerun et téléchargement/vérification du fichier.
 
 ## Limites et publication
 

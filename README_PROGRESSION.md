@@ -44,7 +44,7 @@ Voir le rapport exhaustif [docs/COMPTE_RENDU_ANALYSE_v13.md](docs/COMPTE_RENDU_A
 | 3 — parcours du protocole et mission secrète | [À CORRIGER — PARTIEL] | Menu et démarrage direct du jeu vérifiés ; interactions et scénarios de mission non déroulés. |
 | 4 — performance desktop | [FAIT, LIMITÉ] | 30 arbres actifs mesurés en sandbox ; pas d’appareil Android. Le LOD sommeil existant de `NPCActor` (>95 m) reste en place. |
 | 5 — APK Android | [BLOQUÉ] | Échec local exact : chemins Java SDK et Android SDK valides absents ; aucun APK local. |
-| 6 — GitHub Actions | [À CORRIGER — NON EXÉCUTÉ] | Workflow v13 durci mais non encore lancé. |
+| 6 — GitHub Actions | [RELANCE EN COURS] | Run 37125564277 : contrôles statiques et import réussis ; démarrage bloqué par un `ERROR` du renderer dummy, pas par GDScript. Filtre corrigé ; relance en attente. Pas encore d’APK. |
 
 ## À ne pas confondre
 

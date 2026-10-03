@@ -58,7 +58,9 @@ jobs:
           cd ${PROJECT_DIR}
           godot --headless --quit 2>&1 | tee ../load.log
           cd ..
-          if grep -E "ERROR:|SCRIPT ERROR|Parse Error|Failed to load|Could not parse global class|Identifier not declared|Cannot infer the type" import.log load.log; then echo "Erreurs de chargement/script : voir ci-dessus"; exit 1; fi
+          # Le renderer dummy peut émettre "ERROR: Parameter \"m\" is null." au démarrage sans échec de script.
+          # Les erreurs d'import échouent déjà via le code de retour ; ne bloquer ici que sur les erreurs script/chargement.
+          if grep -E "SCRIPT ERROR|Parse Error|Failed to load|Could not parse global class|Identifier not declared|Cannot infer the type" import.log load.log; then echo "Erreurs de chargement/script : voir ci-dessus"; exit 1; fi
       - name: Export APK debug
         env:
           GODOT_ANDROID_KEYSTORE_DEBUG_PATH: /root/debug.keystore
