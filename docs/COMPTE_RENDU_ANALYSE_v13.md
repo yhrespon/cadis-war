@@ -15,7 +15,7 @@ Trois défauts de source ont été corrigés pendant l’audit :
 2. Le mannequin de prévisualisation du menu montrait son dos à la caméra.
 3. Le filtre du OneShot était limité aux chemins animés dans `idle` (9 articulations seulement) ; surtout, la sous-machine `shoot/reload` n’avait pas de sortie vers `End`, et le OneShot restait actif même après la fin du clip. Le masque couvre désormais tout le sous-arbre `Spine` (22 os) et les clips d’action quittent automatiquement leur sous-machine.
 
-**Limites importantes :** les séquences interactives, le tir/calibrage du réticule, les armes en main, les missions, l’IA/collisions des PNJ, root motion prolongé et les parcours Android n’ont pas été validés intégralement. L’export local de l’APK est bloqué par l’absence d’Android SDK et de chemin Java SDK valide. Le premier run GitHub a passé contrôles statiques/import mais a échoué sur le message du renderer dummy ; le filtre a été corrigé et un second run est à obtenir.
+**Limites importantes :** les séquences interactives, le tir/calibrage du réticule, les armes en main, les missions, l’IA/collisions des PNJ, root motion prolongé et les parcours Android n’ont pas été validés intégralement. L’export local reste bloqué par les SDK absents. Le workflow GitHub a cependant produit un APK debug dont l’archive a été vérifiée ; il n’a pas été installé sur appareil et ne constitue pas une release Play Store.
 
 ## 2. Contrôles automatisés exécutés
 
@@ -30,6 +30,8 @@ Trois défauts de source ont été corrigés pendant l’audit :
 | Smoke-test `res://main.tscn` (visionneuse) | Code 0 ; aucune erreur de script ou chargement détectée. |
 | Smoke-test `res://game.tscn` | Code 0 ; aucune erreur de script ou chargement détectée ; capture graphique produite. |
 | Assertions personnage/animation | 10/10 personnages passés ; assertions détaillées ci-dessous. |
+| GitHub Actions `export-apk` (run `37125744583`, commit `bb3c488`) | Succès : statique, import, vérification scripts/chargement, export APK debug et upload d’artefact. |
+| `cadis_wars-debug.apk` téléchargé | 49 Mo ; `unzip -t` réussi ; SHA-256 `6d74754f82b0a8a754252eee1691547b522062f9b065fd75244452e76d5e761b`. Non installé sur appareil. |
 
 ### Notes sur les messages d’import et de headless
 
@@ -80,10 +82,10 @@ Le clip `shoot` a été testé au niveau de son état et de sa terminaison. La p
 ### 3.4 Export et workflow v13
 
 - Version du preset Android mise à **version code 13 / version name 0.13.0**.
-- Le workflow n’ignore plus les codes de retour de l’import (`|| true` supprimé), et la vérification regroupe import et démarrage en cherchant les erreurs de parse, chargement et déclaration/type.
+- Le workflow n’ignore plus les codes de retour de l’import (`|| true` supprimé), et la vérification regroupe import et démarrage en cherchant les erreurs de parse, chargement et déclaration/type. Le filtre distingue désormais ces erreurs du message renderer dummy.
 - Injection des champs de keystore release via Python plutôt que `sed` avec délimiteur `@` ; un `@` dans le mot de passe ne casse donc plus le remplacement. Les secrets n’ont pas été fournis ou imprimés par cette modification.
 - Run GitHub Actions `37125564277` sur le commit de remplacement : statique et import des ressources réussis ; l’étape de démarrage a échoué uniquement sur `ERROR: Parameter "m" is null.` émis par le renderer dummy sans affichage, pas sur une erreur GDScript. L’export APK a donc été sauté.
-- Le filtre CI a été corrigé pour distinguer ces erreurs renderer des erreurs de parse/chargement. Le rerun après ce correctif reste à valider avant de déclarer un APK compilé.
+- Après correction du filtre, le run `37125744583` a réussi : import, vérification du démarrage, export Android debug et upload d’artefact. L’APK téléchargé passe le test d’intégrité ZIP, mais n’a pas été installé sur appareil.
 
 ## 4. Assertion des dix modèles
 
@@ -127,7 +129,7 @@ Le moniteur du processus physique total reste sous le seuil mentionné de 4 ms p
 | Pause, reprise et retour menu | [À CORRIGER — NON TESTÉ] | Ouvrir pause depuis jeu et voiture ; vérifier contrôles et absence d’inputs bloqués. |
 | Paramètres, équipement et recoloration visibles | [À CORRIGER — NON TESTÉ] | Vérifier le résultat visuel du changement de palette/équipement. |
 | Touches mobiles, zones sûres, encoche et ratio d’écran | [BLOQUÉ — APPAREIL REQUIS] | Tester sur Android réel, dimensions et orientation cible. |
-| Export/installation APK Android | [BLOQUÉ — SDK LOCAL ABSENT / CI EN RELANCE] | L’export local a échoué : voir section 7 ; un premier run CI s’est arrêté avant export sur le faux positif renderer, rerun en attente. |
+| Export/installation APK Android | [APK DEBUG CI OK ; APPAREIL NON TESTÉ] | APK debug produit et vérifié ; l’export local reste bloqué par les SDK absents, installation et essais Android à effectuer sur appareil réel. |
 | Profilage mobile et LOD réel | [BLOQUÉ — APPAREIL REQUIS] | Rejouer la scène et profiler le CPU/GPU sur l’appareil cible. |
 
 ## 7. Export APK local — blocage
@@ -139,7 +141,7 @@ A valid Java SDK path is required in Editor Settings (Android > Java SDK Path).
 A valid Android SDK path is required in Editor Settings (Android > Android SDK Path).
 ```
 
-Résultat : **pas d’APK local**. L’environnement n’a ni Android SDK configuré ni JDK 17 configuré. Le mot de passe/keystore jetable n’est pas inclus dans les livrables. La version Android dans le preset est 13/0.13.0. Ne pas installer l’APK sur appareil avant d’avoir obtenu un export vérifié et testé.
+Résultat local : **pas d’APK construit dans la sandbox** : l’environnement n’a ni Android SDK configuré ni JDK 17 configuré. Le mot de passe/keystore jetable n’est pas inclus dans les livrables. Le run GitHub `37125744583` a produit l’APK debug version 13/0.13.0 ; son archive et son SHA-256 sont vérifiés en section 2. Il reste à installer et tester ce binaire sur un appareil réel ; il n’est pas destiné à Google Play.
 
 ## 8. Fichiers livrables
 

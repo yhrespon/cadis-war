@@ -35,7 +35,7 @@ Le détail des tests et les limites sont dans [README_PROGRESSION.md](README_PRO
 
 ## Android
 
-Preset Android v13 : package `com.cadis.wars`, version 13 / 0.13.0, arm64-v8a, mode immersif. L’export **n’a pas encore produit d’APK** : le test local est bloqué par l’absence de chemins Java SDK et Android SDK ; consulter `EXPORT_ANDROID.md`.
+Preset Android v13 : package `com.cadis.wars`, version 13 / 0.13.0, arm64-v8a, mode immersif. L’export local reste bloqué par l’absence de chemins Java SDK et Android SDK, mais le workflow GitHub a généré un APK debug vérifié. L’APK debug n’a pas été installé sur un appareil et n’est pas une release signée Play Store ; voir `EXPORT_ANDROID.md`.
 
 ## Pipeline des modèles et crédit
 

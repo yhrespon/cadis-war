@@ -43,8 +43,8 @@ Voir le rapport exhaustif [docs/COMPTE_RENDU_ANALYSE_v13.md](docs/COMPTE_RENDU_A
 | 2g — placement PNJ dans des secteurs fraîchement chargés | [À CORRIGER — NON TESTÉ] | Le code se charge ; collision/placement physique non validés. |
 | 3 — parcours du protocole et mission secrète | [À CORRIGER — PARTIEL] | Menu et démarrage direct du jeu vérifiés ; interactions et scénarios de mission non déroulés. |
 | 4 — performance desktop | [FAIT, LIMITÉ] | 30 arbres actifs mesurés en sandbox ; pas d’appareil Android. Le LOD sommeil existant de `NPCActor` (>95 m) reste en place. |
-| 5 — APK Android | [BLOQUÉ] | Échec local exact : chemins Java SDK et Android SDK valides absents ; aucun APK local. |
-| 6 — GitHub Actions | [RELANCE EN COURS] | Run 37125564277 : contrôles statiques et import réussis ; démarrage bloqué par un `ERROR` du renderer dummy, pas par GDScript. Filtre corrigé ; relance en attente. Pas encore d’APK. |
+| 5 — APK Android | [FAIT — DEBUG CI] | APK version 13 / 0.13.0 exporté par GitHub Actions et vérifié comme archive ; l’export local reste bloqué par les SDK absents, et l’APK n’a pas été installé sur appareil. |
+| 6 — GitHub Actions | [FAIT] | Run 37125744583 réussi : contrôles statiques, import, démarrage, export debug et upload d’artefact. Le premier run a révélé un faux positif du renderer dummy, corrigé avant le rerun. |
 
 ## À ne pas confondre
 

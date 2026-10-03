@@ -26,8 +26,9 @@ Variables reconnues par Godot 4.3 : `GODOT_ANDROID_KEYSTORE_DEBUG_PATH|USER|PASS
 - Push/PR : contrôles statiques et données, import des ressources, chargement des scripts, export Android debug et artefact `cadis_wars-debug-apk`.
 - Tag `v*` ou lancement manuel `release=true` : export release, secrets requis : `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_USER` (alias) et `RELEASE_KEYSTORE_PASSWORD`.
 - Le workflow échoue maintenant si l’import échoue (l’erreur n’est plus masquée par `|| true`) et contrôle les messages de parse/chargement. L’injection des champs de keystore utilise Python pour que les valeurs contenant `@` ne cassent pas le preset.
-- Run 37125564277 : contrôles statiques, installation des templates et import réussis ; la vérification de démarrage a interrompu le job à cause du message renderer dummy `ERROR: Parameter "m" is null.` (pas d’erreur GDScript), donc l’export n’a pas été tenté. Le filtre a été ajusté et le rerun est en attente.
-- L’artefact APK ne sera annoncé comme livré qu’après réussite du rerun et téléchargement/vérification du fichier.
+- Run 37125564277 : le démarrage headless a déclenché un faux positif du renderer dummy (`ERROR: Parameter "m" is null.`), pas une erreur GDScript ; aucun APK n’a été exporté lors de ce premier essai.
+- Run 37125744583 : succès après correction du filtre. L’import Godot, la vérification script/chargement, l’export debug et l’upload d’artefact ont tous passé.
+- Artefact téléchargé et vérifié : `cadis_wars-debug.apk`, 49 Mo, SHA-256 `6d74754f82b0a8a754252eee1691547b522062f9b065fd75244452e76d5e761b`. Il s’agit d’un APK debug ; aucune installation sur appareil ni validation de release n’a été faite.
 
 ## Limites et publication
 
