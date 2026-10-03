@@ -1,14 +1,13 @@
-name: CADIS WAR - Android APK
+name: CADIS WAR Android Export
 
 on:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
 
 jobs:
-  export-android:
+  android:
     runs-on: ubuntu-22.04
 
     steps:
@@ -24,24 +23,22 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android SDK
+      - name: Install Android SDK 33
         run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager \
+          sdkmanager --install \
             "platform-tools" \
             "platforms;android-33" \
-            "build-tools;33.0.2" \
-            "cmdline-tools;latest"
+            "build-tools;33.0.2"
+          yes | sdkmanager --licenses || true
 
-      - name: Setup Godot 4.3
-        uses: lihop/setup-godot@v3
+      - name: Install Godot 4.3
+        uses: chickensoft-games/setup-godot@v2
         with:
-          version: 4.3-stable
-          export-templates: true
-          cache: true
+          version: 4.3.0
+          use-dotnet: false
+          include-templates: true
 
-      - name: Configure Godot Android paths
-        shell: bash
+      - name: Configure Godot
         run: |
           mkdir -p "$HOME/.config/godot"
 
@@ -49,35 +46,39 @@ jobs:
           [gd_resource type="EditorSettings" format=3]
 
           [resource]
+
           export/android/android_sdk_path = "$ANDROID_HOME"
           export/android/java_sdk_path = "$JAVA_HOME"
           EOF
 
-          echo "ANDROID_HOME=$ANDROID_HOME"
           echo "JAVA_HOME=$JAVA_HOME"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+
           java -version
           godot --version
 
-      - name: Check project
+      - name: Detect Godot project
         run: |
-          test -f project.godot
-          test -f export_presets.cfg
-          echo "Project Godot détecté"
-          echo "Export presets détecté"
+          find . -name project.godot -print
+          find . -name export_presets.cfg -print
+
+      - name: Prepare build
+        run: |
+          mkdir -p build
 
       - name: Import project
         run: |
-          godot --headless --path . --editor --quit
+          cd godot_project
+          godot --headless --editor --quit
 
-      - name: Export Android APK
+      - name: Export Android
         run: |
-          mkdir -p build
+          cd godot_project
           godot --headless \
-            --path . \
             --export-debug "Android" \
-            build/CADIS-WAR-debug.apk
+            ../build/CADIS-WAR-debug.apk
 
-      - name: Verify APK
+      - name: Check APK
         run: |
           ls -lh build/
           test -f build/CADIS-WAR-debug.apk
