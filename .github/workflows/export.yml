@@ -1,4 +1,4 @@
-name: CADIS WAR Android Export
+name: Build CADIS WAR Android
 
 on:
   push:
@@ -6,119 +6,121 @@ on:
   workflow_dispatch:
 
 jobs:
-  android:
-    runs-on: ubuntu-22.04
+  build-android:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Java 17
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Android SDK
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android 34
+      - name: Install Android SDK 34
         run: |
-          sdkmanager --sdk_root="$ANDROID_HOME" \
-            "platform-tools" \
-            "platforms;android-34" \
-            "build-tools;34.0.0" \
-            "cmdline-tools;latest"
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platform-tools" \
+                     "platforms;android-34" \
+                     "build-tools;34.0.0" \
+                     "cmdline-tools;latest"
 
-          yes | sdkmanager --licenses || true
-
-      - name: Install Godot 4.3
+      - name: Setup Godot 4.3
         uses: chickensoft-games/setup-godot@v2
         with:
-          version: 4.3.0
-          use-dotnet: false
+          version: '4.3.0'
           include-templates: true
 
-      - name: Configure Godot Android
+      - name: Configure Godot Android environment
+        shell: bash
         run: |
-          echo "JAVA_HOME=$JAVA_HOME"
-          echo "ANDROID_HOME=$ANDROID_HOME"
+          set -eux
 
-          JAVA_PATH="$(realpath "$JAVA_HOME")"
-          ANDROID_PATH="$(realpath "$ANDROID_HOME")"
+          JDK_PATH="${JAVA_HOME}"
+          ANDROID_PATH="${ANDROID_HOME}"
 
-          test -x "$JAVA_PATH/bin/java"
-          test -x "$JAVA_PATH/bin/keytool"
-          test -x "$ANDROID_PATH/platform-tools/adb"
-          test -d "$ANDROID_PATH/platforms/android-34"
-          test -d "$ANDROID_PATH/build-tools/34.0.0"
+          echo "JAVA_HOME=$JDK_PATH"
+          echo "ANDROID_HOME=$ANDROID_PATH"
 
           mkdir -p "$HOME/.config/godot"
           mkdir -p "$HOME/.android"
 
-          keytool -genkeypair \
-            -keystore "$HOME/.android/debug.keystore" \
-            -alias androiddebugkey \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass android \
-            -keypass android \
-            -dname "CN=Android Debug,O=Android,C=US"
-
-          cat > "$HOME/.config/godot/editor_settings-4.3.tres" <<EOF
+          cat > "$HOME/.config/godot/editor_settings-4.3.tres" <<EOT
           [gd_resource type="EditorSettings" format=3]
 
           [resource]
-
-          export/android/java_sdk_path = "$JAVA_PATH"
+          export/android/java_sdk_path = "$JDK_PATH"
           export/android/android_sdk_path = "$ANDROID_PATH"
           export/android/debug_keystore = "$HOME/.android/debug.keystore"
           export/android/debug_keystore_user = "androiddebugkey"
           export/android/debug_keystore_pass = "android"
-          EOF
+          EOT
+
+          cp "$HOME/.config/godot/editor_settings-4.3.tres" \
+             "$HOME/.config/godot/editor_settings-4.tres"
 
           echo "===== JAVA ====="
-          "$JAVA_PATH/bin/java" -version
+          "$JDK_PATH/bin/java" -version
+
+          echo "===== ANDROID SDK ====="
+          ls -la "$ANDROID_PATH"
+          ls -la "$ANDROID_PATH/build-tools"
+          ls -la "$ANDROID_PATH/platforms"
 
           echo "===== GODOT SETTINGS ====="
           cat "$HOME/.config/godot/editor_settings-4.3.tres"
 
-      - name: Validate project Android configuration
-        working-directory: godot_project
+      - name: Locate Godot project
+        shell: bash
         run: |
-          echo "===== EXPORT PRESET ====="
-          grep -E 'min_sdk|target_sdk|package/unique_name|package/name' export_presets.cfg
+          set -eux
+          PROJECT_DIR="$(find . -name project.godot -printf '%h\n' | head -n 1)"
+          test -n "$PROJECT_DIR"
+          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+          echo "Godot project: $PROJECT_DIR"
 
-          echo "===== PROJECT ====="
-          grep -E 'config/name|config/features|run/main_scene' project.godot
-
-      - name: Import project
-        working-directory: godot_project
+      - name: Verify Android environment
+        shell: bash
         run: |
+          set -eux
+
+          echo "===== ENV ====="
+          echo "JAVA_HOME=$JAVA_HOME"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+
+          echo "===== BUILD TOOLS ====="
+          ls -la "$ANDROID_HOME/build-tools/34.0.0"
+
+          echo "===== PLATFORM ====="
+          ls -la "$ANDROID_HOME/platforms/android-34"
+
+          echo "===== JAVA ====="
+          "$JAVA_HOME/bin/java" -version
+
+      - name: Validate Godot project
+        shell: bash
+        run: |
+          set -eux
+          cd "$PROJECT_DIR"
           godot --headless --editor --quit
 
-      - name: Export APK
-        working-directory: godot_project
+      - name: Export Android APK
+        shell: bash
         run: |
+          set -eux
+          cd "$PROJECT_DIR"
           mkdir -p build
-
-          godot \
-            --headless \
-            --verbose \
-            --export-debug \
-            "Android" \
-            build/CADIS-WAR-debug.apk
-
-      - name: Verify APK
-        working-directory: godot_project
-        run: |
-          ls -lh build/CADIS-WAR-debug.apk
-          test -s build/CADIS-WAR-debug.apk
+          godot --headless --verbose --export-debug \
+            "Android" build/CADIS-WAR-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: CADIS-WAR-Android
-          path: godot_project/build/CADIS-WAR-debug.apk
+          name: CADIS-WAR-debug
+          path: "${{ env.PROJECT_DIR }}/build/CADIS-WAR-debug.apk"
           if-no-files-found: error
