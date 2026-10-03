@@ -1,36 +1,44 @@
-# Intégration Godot 4.3+ — v6d (NON exécuté : aucun Godot dans mon environnement)
+# Intégration Godot 4.3 — C.A.D.I.S WARS v13
 
 ## Ouvrir / lancer
-Godot 4.3+ -> Importer `godot_project/project.godot` (premier import des 10 `.glb` : quelques secondes chacun).
-- **F5 = niveau de jouable `game.tscn`** (scène principale) : sol, bâtiment + échelle, rampe, voiture, pistolet et batte au sol, 3 mannequins.
-- `main.tscn` = ancienne visionneuse (choix du perso, un bouton par animation) : clic droit > « Lancer cette scène ».
 
-## Ce qui est écrit (scripts/)
-- `player.gd` : **CharacterBody3D** (capsule, gravité, `move_and_slide`) + `GameCharacter` + caméra `SpringArm3D` (collision caméra).
-  Actions : marche/course/sprint (vitesses = celles des animations : 1,6 / 3,7 / 5,3 m/s adulte, pas de patinage), saut, accroupi, roulade,
-  poing, pied, tir (raycast depuis la caméra), recharge, interaction, escalade, conduite, dégâts, mort + réapparition.
-  `use_root_motion = true` : la vitesse vient du root motion de l'animation à la place des valeurs codées.
-- `game_input.gd` : actions clavier créées par code. ZQSD/WASD, Espace saut, Maj sprint, C accroupi, V roulade, J poing, K pied, F tir, R recharge, E interagir. Clic = capture souris, Échap = libère.
-- `touch_controls.gd` : joystick virtuel (gauche), glisser à droite = caméra, 9 boutons. Visible seulement sur appareil tactile/mobile.
-- `weapon.gd` (pistolet, batte : primitives, `BoneAttachment3D` sur la main droite), `pickup.gd`, `target_dummy.gd`,
-  `ladder.gd` (animation climb), `vehicle.gd` (voiture arcade, anim drive), `game_world.gd` (niveau + HUD).
+Ouvrir `godot_project/project.godot` avec **Godot 4.3**. Le premier import des 10 `.glb` se fait par Godot.
 
-## À vérifier au premier lancement (je n'ai pas pu tester)
-1. Console : erreurs de parse GDScript éventuelles (écrit à la main, jamais compilé).
-2. Le personnage joue-t-il ses animations ? Sinon vérifier dans l'Import dock qu'un AnimationPlayer est créé.
-3. Os de la main : Godot peut renommer `mixamorig:RightHand` en `mixamorig_RightHand` ; `attach_to_bone` compare la fin du nom. Orientation de l'arme : régler `grip_offset` / `grip_rotation_deg` dans `weapon.gd` (axe long = +Y de l'os).
-4. Position assise en voiture : `anchor.position` dans `vehicle.gd`. Échelle : le joueur se tient à +0,45 m côté +Z.
-5. Avertissements glTF `byteStride` : corrigés à l'export (stride explicite 8/12/16 sur toutes les vues d'attributs). À reconfirmer dans Godot.
+- **F5** démarre `main_menu.tscn` (scène principale) : Histoire / Mission secrète / Personnage / Magasins / Paramètres / Crédits.
+- `game.tscn` est la scène de jeu (`GameManager.mode` : `story`, `secret` ou `test`).
+- `main.tscn` est la visionneuse de personnages (un bouton par animation) : utiliser « Lancer cette scène ».
+
+## Architecture (`godot_project/scripts/`)
+
+- `autoload/` : Settings, Audio, Game, Inventory, Weapon, Vehicle, NPC, World, Mission, Save, UI.
+- `player/` : `Player` (CharacterBody3D, capsule adaptée à la taille, SpringArm3D) et `PlayerCombat` (hitscan).
+- `game_character.gd` : enveloppe de `.glb`, AnimationPlayer, AnimationTree locomotion, OneShot haut du corps, tenue recolorable et attachement aux os.
+- `ai/`, `world/`, `ui/`, `defs/` (WeaponDef/ItemDef/MissionDef/VehicleDef/CityDef), `vehicles/`.
+- Données : `data/**/*.tres` et `data/registry.json`. `secret_site` est volontairement chargé directement par le mode Mission secrète.
+
+## Mouvement et repères
+
+Valeurs du manifest pour l’adulte de 1,75 m : marche 1,14 m/s, course 3,70 m/s, sprint 5,26 m/s ; enfant de 1,05 m : 0,66 / 2,16 / 3,07 m/s. Ces valeurs sont lues avec `GameCharacter.anim_speed` ; vitesse/animation n’ont pas été comparées sur une longue session en jeu.
+
+- Personnage : +Y haut, +Z avant.
+- Arme (repère local) : canon +Y, dessus +Z, crosse vers -Z. `manifest.weapon_grip.basis_cols` décrit les axes locaux de l’arme sur l’os `RightHand`.
+- Tir joueur : rayon par le centre de l’écran via `Camera3D.project_ray_origin/normal`, aligné avec le centre du HUD.
+
+## Validation v13 exécutée
+
+- Godot 4.3 exact : import, analyse éditeur, et smoke-test du menu, de la visionneuse et du jeu sous OpenGL logiciel/Xvfb.
+- 10/10 modèles : setup, squelette 34 os, main droite, 22 chemins de masque, matériau avec albedo et normal.
+- OneShot `shoot` : lancement actif puis fin automatique vérifiée ; transitions gameplay complètes non parcourues.
+- Correction visuelle du mannequin du menu vérifiée par captures avant/après : `docs/evidence/`.
+
+Le détail des tests et les limites sont dans [README_PROGRESSION.md](README_PROGRESSION.md) et [docs/COMPTE_RENDU_ANALYSE_v13.md](docs/COMPTE_RENDU_ANALYSE_v13.md). Le parcours détaillé reste dans [TEST_PROTOCOL.md](TEST_PROTOCOL.md).
 
 ## Android
-`export_presets.cfg` (preset « Android », arm64, immersif, `com.example.crimegame` -> changer l'identifiant) et `project.godot`
-(`import_etc2_astc=true`, obligatoire pour exporter en mobile/compatibilité, paysage) sont prêts. Il reste à faire sur ta machine :
-Éditeur > Gérer les modèles d'export (installer 4.3+), JDK 17 + Android SDK (Paramètres de l'éditeur > Export > Android), keystore de debug,
-puis Projet > Exporter. Pour la publication : keystore de release (non fourni). Aucun APK n'a été produit ici.
 
-## Pipeline des modèles
-`tools/export_glb.py` écrit directement dans `godot_project/characters/` (source unique : plus de dossier `export/`).
-`python3 tools/export_glb.py [perso1,perso2]` puis `python3 tools/verify_glb.py perso anim image.png`.
+Preset Android v13 : package `com.cadis.wars`, version 13 / 0.13.0, arm64-v8a, mode immersif. L’export **n’a pas encore produit d’APK** : le test local est bloqué par l’absence de chemins Java SDK et Android SDK ; consulter `EXPORT_ANDROID.md`.
 
-## Crédit
-CC-BY-4.0 « Fuse personnage » (Sketchfab, auteur 1831251) : à afficher dans l'écran « Crédits » (déjà dans la visionneuse).
+## Pipeline des modèles et crédit
+
+`tools/export_glb.py` écrit dans `godot_project/characters/` ; vérifier avec `python3 tools/verify_glb.py perso anim image.png`. Les modèles et le registre n’ont pas été modifiés pendant les corrections v13.
+
+Crédit CC-BY-4.0 « Fuse personnage » (Sketchfab, auteur 1831251) : affiché dans « Crédits » et la visionneuse.

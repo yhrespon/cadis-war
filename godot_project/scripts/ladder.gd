@@ -25,7 +25,7 @@ func top_y() -> float:
 	return global_position.y + height
 
 func top_exit() -> Vector3:
-	return global_position + global_basis * Vector3(0, height + 0.05, -0.9)
+	return global_position + global_transform.basis * Vector3(0, height + 0.05, -0.9)
 
 func _add_box(size: Vector3, pos: Vector3, c: Color) -> void:
 	var mi := MeshInstance3D.new()

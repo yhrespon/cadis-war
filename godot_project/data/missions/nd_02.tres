@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "nd_02"
+title = "Zone à nettoyer"
+category = "main"
+mission_type = "élimination"
+city = "nova_district"
+giver = "Mme Kessler"
+requires = ["nd_01"]
+briefing = "Éliminez l'équipe retranchée."
+reward_money = 1200
+objectives = [{"type": "kill", "poi": "hideout_a", "count": 4, "tag": "nda", "weapon": "smg", "text": "Éliminez l'équipe"}]

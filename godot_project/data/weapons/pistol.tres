@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/weapon_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pistol"
+display_name = "Pistolet"
+model = "pistol"
+damage = 26.0
+rate = 3.5
+range_m = 55.0
+spread_deg = 1.0
+spread_move = 1.6
+recoil_deg = 1.4
+mag_size = 12
+ammo_type = "9mm"
+noise_radius = 40.0
+price = 350
+fov_aim = 50.0

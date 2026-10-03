@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/item_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "ammo_shells"
+display_name = "Cartouches (x12)"
+category = "ammo"
+price = 110
+ref_id = "shells"
+amount = 12
+description = "Fusil à pompe."

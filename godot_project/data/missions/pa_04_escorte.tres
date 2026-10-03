@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_04_escorte"
+title = "L'indic"
+category = "main"
+mission_type = "escorte"
+city = "port_alpha"
+giver = "Inspecteur Roux"
+requires = ["pa_03_colis"]
+briefing = "Un informateur doit rejoindre la planque sécurisée. Escortez-le à pied, sans qu'il se fasse tuer."
+reward_money = 1100
+objectives = [{"type": "escort", "npc": "Informateur", "from_poi": "contact_a", "poi": "safehouse", "radius": 4.0, "text": "Escortez l'informateur jusqu'à la planque"}]

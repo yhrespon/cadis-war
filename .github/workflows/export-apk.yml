@@ -1,41 +1,137 @@
-# Exporte un APK debug de C.A.D.I.S WARS sur GitHub Actions (gratuit). NON TESTÉ : premier lancement à surveiller.
-# Utilisation : pousser ce dossier sur un dépôt GitHub -> onglet Actions -> "Export APK" -> télécharger l'artefact "cadis-wars-apk".
-name: Export APK
+# C.A.D.I.S WARS — export APK Android (Godot 4.3) — v13
+# - Push / PR / manuel : APK de DEBUG signé avec une clé de debug générée à la volée (installable en sideload).
+# - Tag « v* » ou lancement manuel avec release=true : APK de RELEASE signé avec VOTRE keystore (secrets du dépôt, voir EXPORT_ANDROID.md).
+name: export-apk
 on:
-  workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Construire aussi l'APK de release (secrets requis)"
+        type: boolean
+        default: false
+
+env:
+  GODOT_VERSION: "4.3"
+  PROJECT_DIR: godot_project
+
 jobs:
-  export:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Contrôles statiques (pas une compilation GDScript)
+        run: |
+          python3 tools/static_check.py
+          python3 tools/check_data.py
+
+  export-debug:
+    needs: checks
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.3
     steps:
       - uses: actions/checkout@v4
-      - name: Modèles d'export Godot
+      - name: Modèles d'export
         run: |
-          mkdir -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable || true
-      - name: Keystore debug
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          if [ "$(realpath ~)" != "/root" ]; then mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable; fi
+      - name: Clé de debug
         run: |
-          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999 -deststoretype pkcs12
-          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$PWD/debug.keystore" >> $GITHUB_ENV
-          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> $GITHUB_ENV
-          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> $GITHUB_ENV
-      - name: Réglages éditeur Android (SDK/JDK de l'image)
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999
+          mv debug.keystore /root/debug.keystore
+      - name: Réglages éditeur Android (seulement si l'image n'en fournit pas)
         run: |
           mkdir -p ~/.config/godot
-          godot --headless --quit -e || true
-          cat >> ~/.config/godot/editor_settings-4.tres <<'EOT' || true
-          EOT
-          sed -i "s#^\[resource\]#[resource]\nexport/android/android_sdk_path = \"$ANDROID_HOME\"\nexport/android/java_sdk_path = \"$JAVA_HOME\"#" ~/.config/godot/editor_settings-4.tres || true
-      - name: Import + export
-        working-directory: godot_project
+          if [ ! -f ~/.config/godot/editor_settings-4.tres ]; then
+            printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/java_sdk_path = "%s"\n' "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/lib/android-sdk}}" "${JAVA_HOME:-/usr/lib/jvm/java-17-openjdk-amd64}" > ~/.config/godot/editor_settings-4.tres
+          fi
+      - name: Import des ressources (.glb) + cache des classes globales
         run: |
-          mkdir -p build
-          godot --headless --import || true
-          godot --headless --export-debug "Android" build/crime_game.apk
+          cd ${PROJECT_DIR}
+          godot --headless --verbose --import 2>&1 | tee ../import.log
+      - name: Vérification de chargement des scripts (import + démarrage)
+        run: |
+          cd ${PROJECT_DIR}
+          godot --headless --quit 2>&1 | tee ../load.log
+          cd ..
+          if grep -E "ERROR:|SCRIPT ERROR|Parse Error|Failed to load|Could not parse global class|Identifier not declared|Cannot infer the type" import.log load.log; then echo "Erreurs de chargement/script : voir ci-dessus"; exit 1; fi
+      - name: Export APK debug
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: /root/debug.keystore
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
+        run: |
+          mkdir -p build/android
+          cd ${PROJECT_DIR}
+          godot --headless --verbose --export-debug "Android" ../build/android/cadis_wars-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: cadis-wars-apk
-          path: godot_project/build/crime_game.apk
+          name: cadis_wars-debug-apk
+          path: build/android/cadis_wars-debug.apk
+
+  export-release:
+    needs: export-debug
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.release == true
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Secrets présents ?
+        env:
+          KS: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KS" ]; then echo "Secret RELEASE_KEYSTORE_BASE64 absent : voir EXPORT_ANDROID.md"; exit 1; fi
+      - name: Modèles d'export
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          if [ "$(realpath ~)" != "/root" ]; then mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable; fi
+      - name: Réglages éditeur Android (seulement si l'image n'en fournit pas)
+        run: |
+          mkdir -p ~/.config/godot
+          if [ ! -f ~/.config/godot/editor_settings-4.tres ]; then
+            printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/java_sdk_path = "%s"\n' "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/lib/android-sdk}}" "${JAVA_HOME:-/usr/lib/jvm/java-17-openjdk-amd64}" > ~/.config/godot/editor_settings-4.tres
+          fi
+      - name: Import des ressources
+        run: |
+          cd ${PROJECT_DIR}
+          godot --headless --verbose --import
+      - name: "Export APK release (aucune variable de debug définie, sinon Godot refuse l'export)"
+        env:
+          KS_B64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          KS_USER: ${{ secrets.RELEASE_KEYSTORE_USER }}
+          KS_PASS: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+        run: |
+          echo "$KS_B64" | base64 --decode > /root/release.keystore
+          cd ${PROJECT_DIR}
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          path = Path("export_presets.cfg")
+          text = path.read_text()
+          values = {
+              "keystore/release": "/root/release.keystore",
+              "keystore/release_user": os.environ["KS_USER"],
+              "keystore/release_password": os.environ["KS_PASS"],
+          }
+          def gd_quote(value):
+              return '"' + value.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"'
+          for key, value in values.items():
+              pattern = re.compile(rf'(?m)^{re.escape(key)}=".*"$')
+              text, count = pattern.subn(lambda _match, k=key, v=value: f"{k}={gd_quote(v)}", text)
+              if count != 1:
+                  raise SystemExit(f"clé {key} absente ou dupliquée dans {path}")
+          path.write_text(text)
+          PY
+          mkdir -p ../build/android
+          godot --headless --verbose --export-release "Android" ../build/android/cadis_wars-release.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cadis_wars-release-apk
+          path: build/android/cadis_wars-release.apk

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/weapon_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "shotgun"
+display_name = "Fusil à pompe"
+model = "shotgun"
+damage = 11.0
+pellets = 8
+rate = 1.1
+range_m = 28.0
+spread_deg = 5.5
+spread_move = 2.0
+recoil_deg = 4.5
+mag_size = 6
+ammo_type = "shells"
+noise_radius = 70.0
+price = 2200
+fov_aim = 55.0

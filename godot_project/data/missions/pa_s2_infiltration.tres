@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_s2_infiltration"
+title = "Coffre de la banque"
+category = "side"
+mission_type = "infiltration"
+city = "port_alpha"
+giver = "Inconnu"
+requires = ["pa_03_colis"]
+briefing = "Rejoignez le coffre sans déclencher l'alerte. Si on vous repère, c'est un échec."
+reward_money = 1000
+objectives = [{"type": "stealth_goto", "poi": "vault", "radius": 3.5, "guards": 2, "text": "Atteignez le coffre sans être repéré"}]

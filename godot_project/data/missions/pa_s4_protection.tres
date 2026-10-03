@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_s4_protection"
+title = "Protégez le témoin"
+category = "side"
+mission_type = "protection"
+city = "port_alpha"
+giver = "Inspecteur Roux"
+requires = ["pa_04_escorte"]
+briefing = "Un témoin attend à la planque. Protégez-le pendant 40 secondes."
+reward_money = 900
+objectives = [{"type": "protect", "npc": "Témoin", "poi": "safehouse", "seconds": 40.0, "per_wave": 2, "weapon": "pistol", "text": "Protégez le témoin"}]

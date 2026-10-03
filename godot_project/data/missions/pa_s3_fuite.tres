@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_s3_fuite"
+title = "Sur le fil"
+category = "side"
+mission_type = "fuite"
+city = "port_alpha"
+giver = "Inconnu"
+requires = ["pa_05_poursuite"]
+briefing = "Une équipe vous traque : gagnez la planque avant qu'elle ne vous rattrape."
+reward_money = 800
+objectives = [[{"type": "goto", "poi": "safehouse", "radius": 4.0, "text": "Atteignez la planque"}, {"type": "survive", "poi": "spawn", "seconds": 45.0, "waves": 2, "per_wave": 2, "weapon": "pistol", "chase": true, "text": "Survivez à la traque"}]]

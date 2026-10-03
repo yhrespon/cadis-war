@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_07_transport"
+title = "Livraison express"
+category = "main"
+mission_type = "transport + chronométrée"
+city = "port_alpha"
+giver = "Inspecteur Roux"
+requires = ["pa_06_defense"]
+briefing = "Prenez la berline garée au sud et conduisez-la jusqu'au point de livraison avant la fin du temps imparti."
+reward_money = 1600
+time_limit = 120.0
+objectives = [{"type": "vehicle_goto", "vehicle": "sedan", "car_poi": "car_a", "poi": "far_a", "radius": 7.0, "text": "Conduisez jusqu'au point de livraison"}]

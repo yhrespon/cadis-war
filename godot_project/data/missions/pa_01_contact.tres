@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_01_contact"
+title = "Premier contact"
+category = "main"
+mission_type = "contact"
+city = "port_alpha"
+giver = "Inspecteur Roux"
+briefing = "Un contact vous attend au carrefour central. Allez le voir : il a une arme à vous confier."
+reward_money = 300
+reward_item = "w_pistol"
+objectives = [{"type": "interact", "npc": "Roux", "poi": "contact_a", "text": "Parlez à Roux", "lines": ["Tu es le nouveau ? Prends ça, tu en auras besoin.", "Les hommes de Vance tiennent la zone nord-est. On commence par eux."]}]

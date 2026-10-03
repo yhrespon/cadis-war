@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "sb_03"
+title = "Récupération et livraison"
+category = "main"
+mission_type = "récupération + livraison"
+city = "sunset_bay"
+giver = "Capitaine Moreau"
+requires = ["sb_02"]
+briefing = "Récupérez le matériel dans la planque, livrez-le au point de dépôt, dans les temps."
+reward_money = 1800
+time_limit = 240.0
+objectives = [[{"type": "kill", "poi": "hideout_b", "count": 3, "tag": "sbb", "weapon": "smg", "text": "Neutralisez les gardes"}, {"type": "collect", "poi": "hideout_b", "items": 1, "item_name": "Matériel", "spread": 6.0, "text": "Récupérez le matériel"}], {"type": "goto", "poi": "drop_a", "radius": 4.0, "text": "Livrez le matériel"}]

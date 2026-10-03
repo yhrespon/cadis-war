@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_02_nettoyage"
+title = "Nettoyage au nord-est"
+category = "main"
+mission_type = "élimination"
+city = "port_alpha"
+giver = "Inspecteur Roux"
+requires = ["pa_01_contact"]
+briefing = "Trois hommes de Vance squattent un entrepôt au nord-est. Éliminez-les."
+reward_money = 700
+objectives = [{"type": "kill", "poi": "hideout_a", "count": 3, "tag": "h_a", "weapon": "pistol", "text": "Éliminez les hommes de Vance"}]

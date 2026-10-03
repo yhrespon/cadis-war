@@ -1,0 +1,6 @@
+Dossier audio : AUCUN fichier son n'est fourni (pas de faux fichiers). Le jeu est silencieux tant qu'ils manquent.
+Déposez ici des .ogg/.wav/.mp3 avec ces noms (cherchés automatiquement) :
+ Musiques : music_menu, music_explore, music_combat
+ Tirs : shot_pistol, shot_smg, shot_shotgun, shot_enemy   | Recharge : reload | Mêlée : melee_swing, melee_hit
+ Impacts : impact_flesh, impact_world | Pas : step | Véhicules : engine_loop, car_crash, car_horn
+ UI : ui_move, ui_select, ui_back, ui_buy, ui_mission | Dialogues : voice_* (non utilisés pour l'instant)

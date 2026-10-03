@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "nd_04"
+title = "Dernier assaut"
+category = "main"
+mission_type = "attaque de repaire"
+city = "nova_district"
+giver = "Mme Kessler"
+requires = ["nd_03"]
+briefing = "Prenez d'assaut le repaire et éliminez le chef."
+reward_money = 3000
+unlocks_city = "ironworks"
+objectives = [{"type": "kill", "poi": "hideout_c", "count": 6, "tag": "ndc", "weapon": "shotgun", "text": "Éliminez les occupants"}]

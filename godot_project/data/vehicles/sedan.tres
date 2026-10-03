@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="VehicleDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/vehicle_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "sedan"
+display_name = "Berline"
+size = Vector3(1.8, 0.62, 4.2)
+body_color = Color(0.698, 0.1098, 0.1098, 1)
+max_speed = 22.0
+accel = 9.0
+max_hp = 220.0
+price = 0

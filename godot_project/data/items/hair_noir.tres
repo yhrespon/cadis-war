@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/item_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "hair_noir"
+display_name = "Cheveux noir"
+category = "hair"
+price = 40
+color = Color(0.0588, 0.0471, 0.0392, 1)
+description = "Teinture (sans effet sur un personnage chauve)."

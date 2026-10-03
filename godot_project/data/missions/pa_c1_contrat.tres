@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_c1_contrat"
+title = "Contrat : racketteurs"
+category = "contract"
+mission_type = "élimination"
+city = "port_alpha"
+giver = "Panneau de contrats"
+requires = ["pa_01_contact"]
+briefing = "Contrat répétable : deux racketteurs sévissent au sud-ouest."
+reward_money = 450
+objectives = [{"type": "kill", "poi": "hideout_b", "count": 2, "tag": "c1", "weapon": "pistol", "text": "Éliminez les racketteurs"}]

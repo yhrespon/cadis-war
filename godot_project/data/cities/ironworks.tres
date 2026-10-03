@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CityDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/city_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "ironworks"
+display_name = "Ironworks"
+seed_value = 37
+blocks_x = 6
+blocks_z = 6
+floors_min = 1
+floors_max = 3
+industrial = true
+wall_color = Color(0.5098, 0.4314, 0.3529, 1)
+wall_color_b = Color(0.3922, 0.3451, 0.3059, 1)
+roof_color = Color(0.2745, 0.2353, 0.2157, 1)
+ground_color = Color(0.3294, 0.3176, 0.2863, 1)
+sky_color = Color(0.6667, 0.5882, 0.5098, 1)
+civilians = 6
+traffic = 5
+pois = {"spawn": Vector2i(2, 2), "shop": Vector2i(1, 2), "contact_a": Vector2i(3, 2), "hideout_a": Vector2i(5, 0), "hideout_b": Vector2i(0, 5), "hideout_c": Vector2i(5, 5), "drop_a": Vector2i(0, 0), "safehouse": Vector2i(1, 0), "depot": Vector2i(3, 5), "vault": Vector2i(4, 3), "car_a": Vector2i(2, 3), "travel": Vector2i(3, 3), "hospital": Vector2i(1, 4), "far_a": Vector2i(5, 2), "search_a": Vector2i(0, 3), "search_b": Vector2i(4, 1), "search_c": Vector2i(2, 5)}

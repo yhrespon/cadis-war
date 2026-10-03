@@ -33,7 +33,7 @@ func _ready() -> void:
 	_shape.position.y = 0.95
 	add_child(_shape)
 
-func take_damage(amount: float, _from: Node = null) -> void:
+func take_damage(amount: float, _from: Node = null, _headshot := false) -> void:
 	if hp <= 0.0:
 		return
 	hp -= amount

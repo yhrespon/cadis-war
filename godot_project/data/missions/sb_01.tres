@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "sb_01"
+title = "Arrivée en ville"
+category = "main"
+mission_type = "contact"
+city = "sunset_bay"
+giver = "Capitaine Moreau"
+requires = ["iw_04"]
+briefing = "Retrouvez votre contact local."
+reward_money = 500
+objectives = [{"type": "interact", "npc": "Capitaine Moreau", "poi": "contact_a", "text": "Parlez à Capitaine Moreau", "lines": ["Bienvenue. Ici, on règle les problèmes vite.", "Un groupe armé nous gêne : occupons-nous d'eux."]}]

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_03_colis"
+title = "Le colis volé"
+category = "main"
+mission_type = "récupération + livraison"
+city = "port_alpha"
+giver = "Inspecteur Roux"
+requires = ["pa_02_nettoyage"]
+briefing = "Un colis est caché dans la planque du sud-ouest, gardée par deux hommes. Récupérez-le puis livrez-le au point de dépôt."
+reward_money = 900
+objectives = [[{"type": "kill", "poi": "hideout_b", "count": 2, "tag": "h_b", "weapon": "pistol", "text": "Neutralisez les gardes"}, {"type": "collect", "poi": "hideout_b", "items": 1, "item_name": "Colis", "spread": 6.0, "text": "Récupérez le colis"}], {"type": "goto", "poi": "drop_a", "radius": 4.0, "text": "Livrez le colis au point de dépôt"}]

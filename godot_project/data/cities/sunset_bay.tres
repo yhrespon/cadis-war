@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="CityDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/city_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "sunset_bay"
+display_name = "Sunset Bay"
+seed_value = 51
+blocks_x = 7
+blocks_z = 6
+floors_min = 1
+floors_max = 3
+wall_color = Color(0.9098, 0.8392, 0.7294, 1)
+wall_color_b = Color(0.8627, 0.6667, 0.549, 1)
+roof_color = Color(0.6667, 0.3137, 0.2353, 1)
+ground_color = Color(0.549, 0.5176, 0.4, 1)
+sky_color = Color(0.9804, 0.7451, 0.549, 1)
+civilians = 14
+traffic = 4
+pois = {"spawn": Vector2i(3, 3), "shop": Vector2i(3, 2), "contact_a": Vector2i(4, 3), "hideout_a": Vector2i(6, 1), "hideout_b": Vector2i(0, 5), "hideout_c": Vector2i(6, 5), "drop_a": Vector2i(1, 0), "safehouse": Vector2i(0, 2), "depot": Vector2i(5, 0), "vault": Vector2i(5, 4), "car_a": Vector2i(2, 3), "travel": Vector2i(4, 2), "hospital": Vector2i(2, 5), "far_a": Vector2i(6, 3), "search_a": Vector2i(1, 4), "search_b": Vector2i(4, 5), "search_c": Vector2i(0, 1)}

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MissionDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/mission_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pa_s1_recherche"
+title = "Cachettes"
+category = "side"
+mission_type = "recherche"
+city = "port_alpha"
+giver = "Gamin des rues"
+requires = ["pa_01_contact"]
+briefing = "Un gamin dit avoir caché trois sacs d'argent dans le quartier. Retrouvez-les."
+reward_money = 600
+objectives = [{"type": "collect", "pois": ["search_a", "search_b", "search_c"], "item_name": "Sac", "text": "Retrouvez les sacs cachés"}]

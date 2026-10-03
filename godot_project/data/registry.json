@@ -1,0 +1,71 @@
+{
+ "weapons": [
+  "pistol",
+  "smg",
+  "shotgun",
+  "bat"
+ ],
+ "items": [
+  "w_pistol",
+  "w_smg",
+  "w_shotgun",
+  "ammo_9mm",
+  "ammo_shells",
+  "heal_kit",
+  "armor_vest",
+  "top_rouge",
+  "top_noir",
+  "top_bleu_nuit",
+  "top_vert_armee",
+  "top_blanc",
+  "top_orange",
+  "bottom_jean_bleu",
+  "bottom_noir",
+  "bottom_kaki",
+  "bottom_gris",
+  "bottom_bordeaux",
+  "hair_noir",
+  "hair_brun",
+  "hair_blond",
+  "hair_roux",
+  "hair_rose"
+ ],
+ "vehicles": [
+  "sedan",
+  "van",
+  "sport"
+ ],
+ "cities": [
+  "port_alpha",
+  "nova_district",
+  "ironworks",
+  "sunset_bay"
+ ],
+ "missions": [
+  "pa_01_contact",
+  "pa_02_nettoyage",
+  "pa_03_colis",
+  "pa_04_escorte",
+  "pa_05_poursuite",
+  "pa_06_defense",
+  "pa_07_transport",
+  "pa_08_repaire",
+  "pa_c1_contrat",
+  "pa_s1_recherche",
+  "pa_s2_infiltration",
+  "pa_s3_fuite",
+  "pa_s4_protection",
+  "nd_01",
+  "nd_02",
+  "nd_03",
+  "nd_04",
+  "iw_01",
+  "iw_02",
+  "iw_03",
+  "iw_04",
+  "sb_01",
+  "sb_02",
+  "sb_03",
+  "sb_04"
+ ]
+}
