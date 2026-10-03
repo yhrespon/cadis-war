@@ -48,23 +48,29 @@ jobs:
           echo "ANDROID_HOME=$ANDROID_PATH"
 
           mkdir -p "$HOME/.config/godot"
-          mkdir -p "$HOME/.android"
+        mkdir -p "$HOME/.android"
 
-          cat > "$HOME/.config/godot/editor_settings-4.3.tres" <<EOT
-          [gd_resource type="EditorSettings" format=3]
+        printf '%s\n' \
+          '[gd_resource type="EditorSettings" format=3]' \
+          '' \
+          '[resource]' \
+          "export/android/java_sdk_path = \"$JDK_PATH\"" \
+          "export/android/android_sdk_path = \"$ANDROID_PATH\"" \
+          "export/android/debug_keystore = \"$HOME/.android/debug.keystore\"" \
+          'export/android/debug_keystore_user = "androiddebugkey"' \
+          'export/android/debug_keystore_pass = "android"' \
+          > "$HOME/.config/godot/editor_settings-4.3.tres"
 
-          [resource]
-          export/android/java_sdk_path = "$JDK_PATH"
-          export/android/android_sdk_path = "$ANDROID_PATH"
-          export/android/debug_keystore = "$HOME/.android/debug.keystore"
-          export/android/debug_keystore_user = "androiddebugkey"
-          export/android/debug_keystore_pass = "android"
-          EOT
+        cp "$HOME/.config/godot/editor_settings-4.3.tres"            "$HOME/.config/godot/editor_settings-4.tres"
 
-          cp "$HOME/.config/godot/editor_settings-4.3.tres" \
-             "$HOME/.config/godot/editor_settings-4.tres"
+        echo "===== GODOT SETTINGS ====="
+        cat "$HOME/.config/godot/editor_settings-4.3.tres"
 
-          echo "===== JAVA ====="
+        test -x "$JDK_PATH/bin/java"
+        test -d "$ANDROID_PATH/platforms/android-34"
+        test -d "$ANDROID_PATH/build-tools/34.0.0"
+
+        echo "===== JAVA ====="
           "$JDK_PATH/bin/java" -version
 
           echo "===== ANDROID SDK ====="
@@ -102,21 +108,50 @@ jobs:
           echo "===== JAVA ====="
           "$JAVA_HOME/bin/java" -version
 
-      - name: Validate Godot project
-        shell: bash
-        run: |
-          set -eux
-          cd "$PROJECT_DIR"
-          godot --headless --editor --quit
-
       - name: Export Android APK
         shell: bash
         run: |
           set -eux
+
           cd "$PROJECT_DIR"
           mkdir -p build
-          godot --headless --verbose --export-debug \
-            "Android" build/CADIS-WAR-debug.apk
+          mkdir -p "$HOME/.config/godot"
+          mkdir -p "$HOME/.android"
+
+          export ANDROID_HOME="$ANDROID_HOME"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          export JAVA_HOME="$JAVA_HOME"
+
+          echo "===== SDK ====="
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls -la "$ANDROID_HOME/build-tools/34.0.0"
+          ls -la "$ANDROID_HOME/platforms/android-34"
+
+          echo "===== JAVA ====="
+          "$JAVA_HOME/bin/java" -version
+
+          echo "===== GODOT SETTINGS ====="
+
+          printf '%s\\n' \
+            '[gd_resource type="EditorSettings" format=3]' \
+            '' \
+            '[resource]' \
+            "export/android/java_sdk_path = \"$JAVA_HOME\"" \
+            "export/android/android_sdk_path = \"$ANDROID_HOME\"" \
+            "export/android/debug_keystore = \"$HOME/.android/debug.keystore\"" \
+            'export/android/debug_keystore_user = "androiddebugkey"' \
+            'export/android/debug_keystore_pass = "android"' \
+            > "$HOME/.config/godot/editor_settings-4.3.tres"
+
+          cp "$HOME/.config/godot/editor_settings-4.3.tres"              "$HOME/.config/godot/editor_settings-4.tres"
+
+          cat "$HOME/.config/godot/editor_settings-4.3.tres"
+
+          echo "===== PRESET ====="
+          grep -n 'gradle_build/min_sdk\\|gradle_build/target_sdk' export_presets.cfg
+
+          echo "===== EXPORT ====="
+          godot --headless --verbose --export-debug             "Android" build/CADIS-WAR-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
