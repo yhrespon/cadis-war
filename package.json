@@ -1,0 +1,19 @@
+{
+  "name": "cadis-war-online-server",
+  "version": "1.0.0",
+  "description": "CADIS WAR - The Last Front online multiplayer server",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "@fastify/websocket": "^11.0.2",
+    "fastify": "^5.4.0"
+  }
+}
