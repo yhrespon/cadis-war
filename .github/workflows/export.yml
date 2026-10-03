@@ -2,7 +2,8 @@ name: CADIS WAR Android Export
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -13,94 +14,93 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Java 17
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Verify Java
-        run: |
-          echo "JAVA_HOME=$JAVA_HOME"
-          echo "PATH=$PATH"
-          which java
-          java -version
-          test -x "$JAVA_HOME/bin/java"
-          test -x "$JAVA_HOME/bin/keytool"
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android packages
+      - name: Install Android SDK
         run: |
-          sdkmanager --install \
+          sdkmanager --sdk_root="$ANDROID_HOME" \
             "platform-tools" \
-            "platforms;android-33" \
-            "build-tools;33.0.2" \
+            "platforms;android-34" \
+            "build-tools;34.0.0" \
             "cmdline-tools;latest"
 
           yes | sdkmanager --licenses || true
 
-      - name: Verify Android SDK
+      - name: Verify Android environment
         run: |
+          echo "JAVA_HOME=$JAVA_HOME"
           echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
-          test -d "$ANDROID_HOME"
-          test -x "$ANDROID_HOME/platform-tools/adb"
-          test -d "$ANDROID_HOME/platforms/android-33"
-          test -d "$ANDROID_HOME/build-tools/33.0.2"
 
-      - name: Install Godot 4.3
+          java -version
+          test -x "$JAVA_HOME/bin/java"
+          test -x "$JAVA_HOME/bin/keytool"
+
+          test -x "$ANDROID_HOME/platform-tools/adb"
+          test -d "$ANDROID_HOME/platforms/android-34"
+          test -d "$ANDROID_HOME/build-tools/34.0.0"
+
+      - name: Setup Godot 4.3
         uses: chickensoft-games/setup-godot@v2
         with:
           version: 4.3.0
           use-dotnet: false
           include-templates: true
 
-      - name: Configure Godot Android paths
+      - name: Configure Godot 4.3 Android
         run: |
           mkdir -p "$HOME/.config/godot"
+          mkdir -p "$HOME/.android"
 
           JDK_PATH="$(cd "$JAVA_HOME" && pwd -P)"
           ANDROID_PATH="$(cd "$ANDROID_HOME" && pwd -P)"
 
-          echo "JDK_PATH=$JDK_PATH"
-          echo "ANDROID_PATH=$ANDROID_PATH"
+          keytool \
+            -genkeypair \
+            -v \
+            -keystore "$HOME/.android/debug.keystore" \
+            -alias androiddebugkey \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass android \
+            -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
 
-          test -x "$JDK_PATH/bin/java"
-          test -x "$JDK_PATH/bin/keytool"
-          test -x "$ANDROID_PATH/platform-tools/adb"
-
-          cat > "$HOME/.config/godot/editor_settings-4.tres" <<EOF
+          cat > "$HOME/.config/godot/editor_settings-4.3.tres" <<EOF
           [gd_resource type="EditorSettings" format=3]
 
           [resource]
 
           export/android/java_sdk_path = "$JDK_PATH"
           export/android/android_sdk_path = "$ANDROID_PATH"
+          export/android/debug_keystore = "$HOME/.android/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
           EOF
 
-          echo "===== GODOT SETTINGS ====="
-          cat "$HOME/.config/godot/editor_settings-4.tres"
-          echo "=========================="
+          echo "===== GODOT 4.3 SETTINGS ====="
+          cat "$HOME/.config/godot/editor_settings-4.3.tres"
+          echo "=============================="
 
-      - name: Locate project
-        run: |
-          find . -maxdepth 3 -name project.godot -print
-          find . -maxdepth 3 -name export_presets.cfg -print
-
-      - name: Detect project directory
+      - name: Locate Godot project
         id: project
         run: |
-          PROJECT_FILE="$(find . -maxdepth 3 -name project.godot -print -quit)"
+          PROJECT_FILE="$(find . -name project.godot -print -quit)"
           test -n "$PROJECT_FILE"
 
           PROJECT_DIR="$(dirname "$PROJECT_FILE")"
 
-          echo "PROJECT_DIR=$PROJECT_DIR"
+          echo "Project: $PROJECT_DIR"
           echo "project_dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
 
-      - name: Import Godot project
+      - name: Import project
         working-directory: ${{ steps.project.outputs.project_dir }}
         run: |
           godot --headless --editor --quit
@@ -109,7 +109,9 @@ jobs:
         working-directory: ${{ steps.project.outputs.project_dir }}
         run: |
           mkdir -p build
-          godot --headless \
+
+          godot \
+            --headless \
             --verbose \
             --export-debug "Android" \
             build/CADIS-WAR-debug.apk
