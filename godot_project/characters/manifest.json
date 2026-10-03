@@ -1,0 +1,2743 @@
+{
+ "credit": "Modèle de base « Fuse personnage » (Sketchfab, auteur 1831251), licence CC-BY-4.0 ; personnages dérivés générés par code (voir source_model/license.txt). Crédit obligatoire dans le jeu.",
+ "units": "m",
+ "up": "+Y",
+ "forward": "+Z",
+ "fps": 30,
+ "characters": [
+  {
+   "id": "homme_barbu",
+   "file": "homme_barbu.glb",
+   "gender": "m",
+   "age": "adulte",
+   "height_m": 1.75,
+   "appearance": {
+    "skin": "mate",
+    "top": [
+     "tshirt",
+     [
+      190,
+      40,
+      40
+     ]
+    ],
+    "bottom": [
+     "jean",
+     [
+      50,
+      70,
+      120
+     ]
+    ],
+    "hair": "court",
+    "hair_color": [
+     35,
+     25,
+     20
+    ],
+    "beard": "complete",
+    "shoes": [
+     50,
+     40,
+     35
+    ],
+    "build": [
+     1.06,
+     1.06,
+     1.06,
+     1.0
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.4154,
+    "hips_z": -0.1325
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1426,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.136
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.136
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.439
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.696
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.733
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       5.256
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "femme_jupe",
+   "file": "femme_jupe.glb",
+   "gender": "f",
+   "age": "adulte",
+   "height_m": 1.652,
+   "appearance": {
+    "skin": "clair",
+    "top": [
+     "debardeur",
+     [
+      235,
+      235,
+      235
+     ]
+    ],
+    "bottom": [
+     "jupe",
+     [
+      30,
+      30,
+      60
+     ]
+    ],
+    "hair": "longs",
+    "hair_color": [
+     190,
+     140,
+     70
+    ],
+    "shoes": [
+     130,
+     30,
+     50
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.3849,
+    "hips_z": -0.1318
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1346,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.071
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.071
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.301
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.486
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.578
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.958
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "punk",
+   "file": "punk.glb",
+   "gender": "f",
+   "age": "adulte",
+   "height_m": 1.704,
+   "appearance": {
+    "skin": "beige",
+    "top": [
+     "veste",
+     [
+      25,
+      25,
+      28
+     ]
+    ],
+    "bottom": [
+     "cargo",
+     [
+      70,
+      85,
+      50
+     ]
+    ],
+    "hair": "crete",
+    "hair_color": [
+     210,
+     40,
+     140
+    ],
+    "shoes": [
+     30,
+     30,
+     30
+    ],
+    "gloves": true
+   },
+   "drive_seat": {
+    "butt_y": 0.385,
+    "hips_z": -0.1318
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1346,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.071
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.071
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.301
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.486
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.578
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.958
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "garcon_enfant",
+   "file": "garcon_enfant.glb",
+   "gender": "m",
+   "age": "enfant",
+   "height_m": 1.065,
+   "appearance": {
+    "skin": "ebene",
+    "top": [
+     "tshirt",
+     [
+      240,
+      200,
+      30
+     ]
+    ],
+    "bottom": [
+     "short",
+     [
+      50,
+      90,
+      160
+     ]
+    ],
+    "hair": "coupe",
+    "hair_color": [
+     15,
+     12,
+     10
+    ],
+    "build": [
+     0.62,
+     0.62,
+     0.62,
+     1.22
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.2315,
+    "hips_z": -0.1273
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.0834,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.664
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       0.664
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.427
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       2.162
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.599
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.074
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "ado_casquette",
+   "file": "ado_casquette.glb",
+   "gender": "m",
+   "age": "ado",
+   "height_m": 1.553,
+   "appearance": {
+    "skin": "fonce",
+    "top": [
+     "manches",
+     [
+      70,
+      90,
+      70
+     ]
+    ],
+    "bottom": [
+     "jean",
+     [
+      35,
+      35,
+      45
+     ]
+    ],
+    "hair": "court",
+    "hair_color": [
+     20,
+     15,
+     12
+    ],
+    "hat": [
+     "casquette",
+     [
+      200,
+      200,
+      205
+     ]
+    ],
+    "build": [
+     0.93,
+     0.93,
+     0.93,
+     1.04
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.3513,
+    "hips_z": -0.131
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1252,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.996
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       0.996
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.14
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.242
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.398
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.611
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "fille_queue",
+   "file": "fille_queue.glb",
+   "gender": "f",
+   "age": "enfant",
+   "height_m": 1.218,
+   "appearance": {
+    "skin": "brun",
+    "top": [
+     "tshirt",
+     [
+      60,
+      150,
+      200
+     ]
+    ],
+    "bottom": [
+     "short",
+     [
+      240,
+      240,
+      240
+     ]
+    ],
+    "hair": "queue",
+    "hair_color": [
+     25,
+     18,
+     14
+    ],
+    "build": [
+     0.72,
+     0.72,
+     0.72,
+     1.15
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.2688,
+    "hips_z": -0.1285
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.0969,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.771
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       0.771
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.657
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       2.51
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.856
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.57
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "femme_chignon",
+   "file": "femme_chignon.glb",
+   "gender": "f",
+   "age": "adulte",
+   "height_m": 1.724,
+   "appearance": {
+    "skin": "beige",
+    "top": [
+     "veste",
+     [
+      120,
+      30,
+      40
+     ]
+    ],
+    "bottom": [
+     "jupe_longue",
+     [
+      40,
+      40,
+      48
+     ]
+    ],
+    "hair": "chignon",
+    "hair_color": [
+     60,
+     35,
+     20
+    ],
+    "shoes": [
+     35,
+     30,
+     30
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.3901,
+    "hips_z": -0.1318
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1346,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.071
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.071
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.301
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.486
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.578
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.958
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "homme_afro",
+   "file": "homme_afro.glb",
+   "gender": "m",
+   "age": "adulte",
+   "height_m": 1.766,
+   "appearance": {
+    "skin": "ebene",
+    "top": [
+     "veste",
+     [
+      40,
+      60,
+      110
+     ]
+    ],
+    "bottom": [
+     "jean",
+     [
+      25,
+      25,
+      30
+     ]
+    ],
+    "hair": "afro",
+    "hair_color": [
+     18,
+     14,
+     12
+    ],
+    "shoes": [
+     60,
+     45,
+     30
+    ],
+    "build": [
+     1.04,
+     1.05,
+     1.04,
+     1.0
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.41,
+    "hips_z": -0.1323
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.14,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.125
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.125
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.416
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.661
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.707
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       5.206
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "ado_fille_longs",
+   "file": "ado_fille_longs.glb",
+   "gender": "f",
+   "age": "ado",
+   "height_m": 1.561,
+   "appearance": {
+    "skin": "mate",
+    "top": [
+     "manches",
+     [
+      225,
+      120,
+      40
+     ]
+    ],
+    "bottom": [
+     "jean",
+     [
+      70,
+      100,
+      150
+     ]
+    ],
+    "hair": "longs",
+    "hair_color": [
+     45,
+     28,
+     20
+    ],
+    "shoes": [
+     230,
+     230,
+     230
+    ],
+    "build": [
+     0.94,
+     0.94,
+     0.94,
+     1.03
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.3551,
+    "hips_z": -0.1311
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1265,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.007
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.007
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.163
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.277
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.424
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.661
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "chauve_costume",
+   "file": "chauve_costume.glb",
+   "gender": "m",
+   "age": "adulte",
+   "height_m": 1.703,
+   "appearance": {
+    "skin": "clair",
+    "top": [
+     "veste",
+     [
+      35,
+      35,
+      45
+     ]
+    ],
+    "bottom": [
+     "cargo",
+     [
+      45,
+      45,
+      55
+     ]
+    ],
+    "hair": "chauve",
+    "beard": "complete",
+    "hair_color": [
+     80,
+     60,
+     45
+    ],
+    "gloves": true,
+    "build": [
+     1.1,
+     1.04,
+     1.1,
+     1.0
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.4071,
+    "hips_z": -0.133
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.148,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.115
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.115
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.393
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       3.626
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.682
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       5.157
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       2.4
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.3
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.55
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.6,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.5,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  }
+ ]
+}

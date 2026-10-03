@@ -1,0 +1,41 @@
+# Exporte un APK debug de C.A.D.I.S WARS sur GitHub Actions (gratuit). NON TESTÉ : premier lancement à surveiller.
+# Utilisation : pousser ce dossier sur un dépôt GitHub -> onglet Actions -> "Export APK" -> télécharger l'artefact "cadis-wars-apk".
+name: Export APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Modèles d'export Godot
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable || true
+      - name: Keystore debug
+        run: |
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999 -deststoretype pkcs12
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$PWD/debug.keystore" >> $GITHUB_ENV
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> $GITHUB_ENV
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> $GITHUB_ENV
+      - name: Réglages éditeur Android (SDK/JDK de l'image)
+        run: |
+          mkdir -p ~/.config/godot
+          godot --headless --quit -e || true
+          cat >> ~/.config/godot/editor_settings-4.tres <<'EOT' || true
+          EOT
+          sed -i "s#^\[resource\]#[resource]\nexport/android/android_sdk_path = \"$ANDROID_HOME\"\nexport/android/java_sdk_path = \"$JAVA_HOME\"#" ~/.config/godot/editor_settings-4.tres || true
+      - name: Import + export
+        working-directory: godot_project
+        run: |
+          mkdir -p build
+          godot --headless --import || true
+          godot --headless --export-debug "Android" build/crime_game.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cadis-wars-apk
+          path: godot_project/build/crime_game.apk

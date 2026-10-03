@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fuse personnage
+* source:	https://sketchfab.com/3d-models/fuse-personnage-826c65a1832d45a7a72e107a20f26864
+* author:	1831251 (https://sketchfab.com/1831251)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fuse personnage" (https://sketchfab.com/3d-models/fuse-personnage-826c65a1832d45a7a72e107a20f26864) by 1831251 (https://sketchfab.com/1831251) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

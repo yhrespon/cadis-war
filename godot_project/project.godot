@@ -1,0 +1,23 @@
+; Projet Godot 4.x (testé sur le papier : voir README_GODOT.md)
+config_version=5
+
+[application]
+config/name="C.A.D.I.S WARS"
+config/description="C.A.D.I.S WARS (en développement) : menu principal (main_menu.tscn), niveau de test (game.tscn), visionneuse (main.tscn)"
+run/main_scene="res://main_menu.tscn"
+config/features=PackedStringArray("4.3", "Mobile")
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=0
+
+[input_devices]
+pointing/emulate_mouse_from_touch=true
+
+[rendering]
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+textures/vram_compression/import_etc2_astc=true
