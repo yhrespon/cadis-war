@@ -17,3 +17,6 @@ extends Resource
 @export var seat_y := 0.62                       # hauteur du dessus de l'assise
 @export var seat_z := -0.3
 @export var price := 0
+@export var kind := "car"                           # car | moto | truck | heli | plane
+@export var climb_rate := 6.0                     # aéronefs : vitesse verticale max (m/s)
+@export var lift_speed := 18.0                    # avion : vitesse mini de décollage (m/s)

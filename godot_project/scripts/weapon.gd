@@ -23,6 +23,15 @@ func _build() -> void:
 			_cyl(0.022, 0.022, 0.30, Vector3(0, 0.12, 0), wood)
 			_cyl(0.028, 0.045, 0.50, Vector3(0, 0.52, 0), wood)
 			muzzle_y = 0.8
+		"dagger":
+			var blade := _mat(Color(0.78, 0.8, 0.84))
+			blade.metallic = 0.8
+			blade.roughness = 0.25
+			_cyl(0.017, 0.019, 0.11, Vector3(0, 0.045, 0), dark)             # manche
+			_box(Vector3(0.012, 0.014, 0.10), Vector3(0, 0.105, 0), steel)  # garde
+			_box(Vector3(0.010, 0.26, 0.032), Vector3(0, 0.24, 0), blade)   # lame
+			_box(Vector3(0.010, 0.05, 0.020), Vector3(0, 0.395, 0), blade)  # pointe
+			muzzle_y = 0.42
 		"smg":
 			_box(Vector3(0.04, 0.34, 0.06), Vector3(0, 0.15, 0.0), dark)
 			_box(Vector3(0.025, 0.05, 0.14), Vector3(0, 0.1, -0.10), dark)

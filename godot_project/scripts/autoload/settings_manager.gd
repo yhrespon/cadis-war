@@ -8,10 +8,10 @@ const PATH := "user://settings.cfg"
 const QUALITIES: Array = ["Auto", "Low", "Medium", "High", "Ultra"]
 
 const PRESETS := {
-	"Low":    {"res_scale": 0.6,  "shadows": false, "view_distance": 90.0,  "effects": false, "lod": 0.5, "textures": 2, "fps": 30},
-	"Medium": {"res_scale": 0.8,  "shadows": false, "view_distance": 130.0, "effects": true,  "lod": 0.8, "textures": 1, "fps": 45},
-	"High":   {"res_scale": 1.0,  "shadows": true,  "view_distance": 180.0, "effects": true,  "lod": 1.0, "textures": 0, "fps": 60},
-	"Ultra":  {"res_scale": 1.0,  "shadows": true,  "view_distance": 260.0, "effects": true,  "lod": 1.3, "textures": 0, "fps": 60},
+	"Low":    {"res_scale": 0.6,  "shadows": false, "view_distance": 70.0,  "effects": false, "lod": 0.5, "textures": 2, "fps": 30},
+	"Medium": {"res_scale": 0.8,  "shadows": false, "view_distance": 100.0, "effects": true,  "lod": 0.8, "textures": 1, "fps": 45},
+	"High":   {"res_scale": 1.0,  "shadows": true,  "view_distance": 130.0, "effects": true,  "lod": 1.0, "textures": 0, "fps": 60},
+	"Ultra":  {"res_scale": 1.0,  "shadows": true,  "view_distance": 180.0, "effects": true,  "lod": 1.3, "textures": 0, "fps": 60},
 }
 
 const DEFAULTS := {
@@ -44,12 +44,17 @@ func _load() -> void:
 		for key in DEFAULTS[section]:
 			if cf.has_section_key(section, key):
 				data[section][key] = cf.get_value(section, key)
+	# v18 : anciens réglages enregistrés = trop lourds : on réapplique le préréglage de l'appareil une fois
+	if int(cf.get_value("meta", "v", 0)) < 18 and str(data["graphics"]["quality"]) == "Auto":
+		_apply_preset("Auto")
+		save()
 
 func save() -> void:
 	var cf := ConfigFile.new()
 	for section in data:
 		for key in data[section]:
 			cf.set_value(section, key, data[section][key])
+	cf.set_value("meta", "v", 18)
 	cf.save(PATH)
 
 func get_value(section: String, key: String) -> Variant:
@@ -69,7 +74,7 @@ func set_value(section: String, key: String, value: Variant) -> void:
 func _auto_quality() -> String:
 	if not OS.has_feature("mobile"):
 		return "High"
-	return "High" if OS.get_processor_count() >= 8 else "Medium"
+	return "Medium"      # v18 : sur mobile on démarre en Medium (modifiable dans Réglages)
 
 func _apply_preset(q: String) -> void:
 	var name := _auto_quality() if q == "Auto" else q
@@ -130,6 +135,8 @@ func apply_to_scene() -> void:
 	if cam != null:
 		cam.far = float(g["view_distance"]) + 40.0
 	var vp := get_viewport()
+	vp.mesh_lod_threshold = 4.0 if float(g["view_distance"]) <= 100.0 else 2.5     # v18 : modèles simplifiés plus tôt (LOD auto des .glb)
+	WorldManager.load_radius = 1 if float(g["view_distance"]) <= 100.0 else 2       # v18 : moins de secteurs de ville chargés
 	if "texture_mipmap_bias" in vp:
 		vp.set("texture_mipmap_bias", float(g["textures"]) * 0.75)
 
@@ -163,5 +170,5 @@ func npc_density() -> float:
 	return clampf(float(data["graphics"]["lod"]), 0.5, 1.3)
 
 func vibrate(ms: int) -> void:
-	if bool(data["controls"]["vibration"]) and OS.has_feature("mobile"):
-		Input.vibrate_handheld(ms)
+	if bool(data["controls"]["vibration"]) and (OS.has_feature("mobile") or OS.has_feature("android")):
+		Input.vibrate_handheld(maxi(ms, 45))      # < ~40 ms : ignoré par beaucoup de moteurs de vibration Android

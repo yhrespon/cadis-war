@@ -7,3 +7,5 @@ build/
 *.keystore
 *.jks
 export_credentials.cfg
+node_modules/
+*.log

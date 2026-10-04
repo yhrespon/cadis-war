@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="VehicleDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/vehicle_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "truck"
+display_name = "Camion"
+kind = "truck"
+size = Vector3(2.4, 1.1, 7.0)
+body_color = Color(0.1961, 0.3529, 0.6275, 1)
+cabin_height = 0.9
+max_speed = 15.0
+accel = 5.0
+brake_force = 20.0
+steer_rate = 1.1
+max_hp = 520.0
+seat_x = 0.6
+seat_y = 1.25
+seat_z = -0.5
+price = 0

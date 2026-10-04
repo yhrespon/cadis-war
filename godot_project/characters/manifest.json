@@ -6,6 +6,1128 @@
  "fps": 30,
  "characters": [
   {
+   "id": "mx_remy",
+   "file": "mx_remy.glb",
+   "gender": "m",
+   "age": "adulte",
+   "height_m": 1.8,
+   "appearance": {
+    "source": "mixamo",
+    "materials": [
+     "Bodymat.Body",
+     "Bodymat.Eyes",
+     "Bottommat",
+     "Eyelashmat",
+     "Hairmat",
+     "Shoesmat",
+     "Topmat"
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.4512,
+    "hips_z": -0.1439
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1289,
+    "hand_len_measured_m": 0.1289,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.455
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.455
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.125
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.734
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.5
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       6.733
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.28
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.075
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.384
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.704
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.769,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.641,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "stab": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   },
+   "outfit_tiles": {},
+   "source": "mixamo",
+   "legacy": false,
+   "tint_materials": {
+    "top": [
+     "Topmat"
+    ],
+    "bottom": [
+     "Bottommat"
+    ],
+    "hair": [
+     "Hairmat"
+    ]
+   },
+   "label": "Remy",
+   "stats": {
+    "tris": 22036,
+    "tris_fbx": 35196,
+    "bones": 67,
+    "size_mb": 6.05
+   }
+  },
+  {
+   "id": "mx_brute",
+   "file": "mx_brute.glb",
+   "gender": "m",
+   "age": "adulte",
+   "height_m": 1.92,
+   "appearance": {
+    "source": "mixamo",
+    "materials": [
+     "Body_MAT4",
+     "EyeSpec_MAT2",
+     "EyeSpec_MAT4",
+     "Lashes_MAT4",
+     "MaleBruteA_Bottom5",
+     "MaleBruteA_Hair6",
+     "MaleBruteA_Moustache5",
+     "MaleBruteA_Shoes6",
+     "phong4"
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.4954,
+    "hips_z": -0.1581
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.1466,
+    "hand_len_measured_m": 0.1466,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.598
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.598
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.431
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       5.198
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.843
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       7.392
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.406
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.376
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.422
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.773
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.844,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.704,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "stab": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   },
+   "outfit_tiles": {},
+   "source": "mixamo",
+   "legacy": false,
+   "tint_materials": {
+    "bottom": [
+     "MaleBruteA_Bottom5"
+    ],
+    "hair": [
+     "MaleBruteA_Hair6"
+    ]
+   },
+   "label": "Brute",
+   "stats": {
+    "tris": 22005,
+    "tris_fbx": 24637,
+    "bones": 72,
+    "size_mb": 5.22
+   }
+  },
+  {
+   "id": "mx_eve",
+   "file": "mx_eve.glb",
+   "gender": "f",
+   "age": "adulte",
+   "height_m": 1.68,
+   "appearance": {
+    "source": "mixamo",
+    "materials": [
+     "SpacePirate_M"
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.4471,
+    "hips_z": -0.1427
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.115,
+    "hand_len_measured_m": 0.0939,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.442
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.442
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.097
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.692
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.469
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       6.672
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.269
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.047
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.381
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.697
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.762,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.635,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "stab": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   },
+   "outfit_tiles": {},
+   "source": "mixamo",
+   "legacy": false,
+   "tint_materials": {},
+   "label": "Eve (pirate de l'espace)",
+   "stats": {
+    "tris": 21999,
+    "tris_fbx": 27207,
+    "bones": 65,
+    "size_mb": 2.2
+   }
+  },
+  {
+   "id": "mx_ch21",
+   "file": "mx_ch21.glb",
+   "gender": "f",
+   "age": "adulte",
+   "height_m": 1.8,
+   "appearance": {
+    "source": "mixamo",
+    "materials": [
+     "Ch21_body.Ch21_Body",
+     "Ch21_body.Ch21_Pants",
+     "Ch21_body.Ch21_Shirt",
+     "Ch21_body.Ch21_Shoes",
+     "Ch21_hair.Ch21_Eyelasshes",
+     "Ch21_hair.Ch21_Hair"
+    ]
+   },
+   "drive_seat": {
+    "butt_y": 0.4419,
+    "hips_z": -0.141
+   },
+   "weapon_grip": {
+    "hand_len_m": 0.115,
+    "hand_len_measured_m": 0.0922,
+    "basis_cols": [
+     [
+      -0.02024,
+      0.15778,
+      -0.98727
+     ],
+     [
+      -0.06149,
+      0.9854,
+      0.15874
+     ],
+     [
+      0.9979,
+      0.06392,
+      -0.01024
+     ]
+    ]
+   },
+   "animations": {
+    "idle": {
+     "duration": 3.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "walk": {
+     "duration": 1.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.426
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       1.426
+      ]
+     }
+    },
+    "run": {
+     "duration": 0.66,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.061
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       4.637
+      ]
+     }
+    },
+    "sprint": {
+     "duration": 0.52,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.429
+      ],
+      "speed_mps": [
+       0.0,
+       0.0,
+       6.595
+      ]
+     }
+    },
+    "jump": {
+     "duration": 1.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       1.254
+      ]
+     }
+    },
+    "crouch": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "roll": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       3.012
+      ]
+     }
+    },
+    "punch": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "kick": {
+     "duration": 1.1,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "shoot": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "reload": {
+     "duration": 2.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "damage": {
+     "duration": 0.9,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.377
+      ]
+     }
+    },
+    "death": {
+     "duration": 2.0,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       -0.689
+      ]
+     }
+    },
+    "drive": {
+     "duration": 2.0,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "climb": {
+     "duration": 1.2,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.753,
+       0.0
+      ],
+      "speed_mps": [
+       0.0,
+       0.628,
+       0.0
+      ]
+     }
+    },
+    "interact": {
+     "duration": 1.4,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "dance": {
+     "duration": 1.6,
+     "loop": true,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "stab": {
+     "duration": 1.2,
+     "loop": false,
+     "root_motion": {
+      "distance_m": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    }
+   },
+   "outfit_tiles": {},
+   "source": "mixamo",
+   "legacy": false,
+   "tint_materials": {
+    "top": [
+     "Ch21_body.Ch21_Shirt"
+    ],
+    "bottom": [
+     "Ch21_body.Ch21_Pants"
+    ],
+    "hair": [
+     "Ch21_hair.Ch21_Hair"
+    ]
+   },
+   "label": "Ch21",
+   "stats": {
+    "tris": 24346,
+    "tris_fbx": 59192,
+    "bones": 65,
+    "size_mb": 3.78
+   }
+  },
+  {
    "id": "homme_barbu",
    "file": "homme_barbu.glb",
    "gender": "m",
@@ -309,7 +1431,8 @@
      ],
      "vertices": 1057
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "femme_jupe",
@@ -608,7 +1731,8 @@
      ],
      "vertices": 1463
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "punk",
@@ -908,7 +2032,8 @@
      ],
      "vertices": 1123
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "garcon_enfant",
@@ -1208,7 +2333,8 @@
      ],
      "vertices": 1057
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "ado_casquette",
@@ -1516,7 +2642,8 @@
      ],
      "vertices": 1057
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "fille_queue",
@@ -1816,7 +2943,8 @@
      ],
      "vertices": 1098
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "femme_chignon",
@@ -2115,7 +3243,8 @@
      ],
      "vertices": 1115
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "homme_afro",
@@ -2420,7 +3549,8 @@
      ],
      "vertices": 920
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "ado_fille_longs",
@@ -2725,7 +3855,8 @@
      ],
      "vertices": 1463
     }
-   }
+   },
+   "legacy": true
   },
   {
    "id": "chauve_costume",
@@ -3018,7 +4149,10 @@
      ],
      "vertices": 710
     }
-   }
+   },
+   "legacy": true
   }
- ]
+ ],
+ "use_legacy": false,
+ "credit_mixamo": "Personnages Mixamo (Adobe) : Remy, Brute, Eve By J. Gonzales, Ch21 — Adobe Mixamo, usage libre dans les jeux (voir conditions Adobe/Mixamo)."
 }

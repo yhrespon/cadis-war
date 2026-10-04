@@ -22,6 +22,8 @@ func _ready() -> void:
 		return
 	GameManager.current_city = story_city          # load_city() l'a écrasée : la ville d'histoire ne doit pas changer (sauvegarde)
 	_build_environment()
+	CrimeManager.reset()
+	AudioManager.play_music("explore")
 	NPCManager.clear()
 	var spawner := NPCSpawner.new()
 	spawner.name = "NPCSpawner"
@@ -85,21 +87,16 @@ func _exit_tree() -> void:
 func _spawn_position() -> Vector3:
 	return WorldManager.poi_position("spawn") + Vector3(0.0, 0.1, 0.0)
 
+## v17 : ciel, soleil/lune, brouillard, pluie, cycle jour/nuit (EnvironmentController). Le site secret reste de nuit, sans météo.
 func _build_environment() -> void:
-	var env := WorldEnvironment.new()
-	var e := Environment.new()
-	e.background_mode = Environment.BG_COLOR
-	e.background_color = WorldManager.city.sky_color
-	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.75, 0.75, 0.8)
-	e.ambient_light_energy = 0.6
-	env.environment = e
-	add_child(env)
-	var sun := DirectionalLight3D.new()
-	sun.rotation_degrees = Vector3(-50, 35, 0)
-	sun.add_to_group("sun")
-	sun.shadow_enabled = bool(SettingsManager.get_value("graphics", "shadows"))
-	add_child(sun)
+	var ec := EnvironmentController.new()
+	ec.name = "EnvironmentController"
+	if GameManager.mode == "secret":
+		GameManager.world_hour = 23.0
+		GameManager.world_weather = "clear"
+		ec.time_scale = 0.0
+	add_child(ec)
+	SettingsManager.apply_to_scene()
 
 # ------------------------------------------------------------------ mort / respawn
 func _on_player_died() -> void:
@@ -111,6 +108,10 @@ func _on_player_died() -> void:
 		return
 	var hosp := WorldManager.poi_position("hospital") + Vector3(0.0, 0.1, 0.0)
 	WorldManager.update_around(hosp)
+	var was_wanted := CrimeManager.is_wanted()
+	var fine := CrimeManager.bust_player()          # mort ou arrêté : la recherche est effacée, amende éventuelle
+	if was_wanted and fine > 0:
+		UIManager.toast("Frais d'hôpital et amende : -%d $" % fine, Color(1.0, 0.8, 0.4), 3.0)
 	player.respawn(hosp)
 	_respawning = false
 	SaveManager.autosave(player)

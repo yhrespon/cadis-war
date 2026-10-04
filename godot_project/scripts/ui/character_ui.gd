@@ -1,8 +1,8 @@
 class_name CharacterUI
 extends BasePanel
-## Choix du personnage (menu principal) : les 10 personnages du manifest (genre, âge, taille). Choisir = GameManager.character_id (utilisé par Player),
+## Choix du personnage (menu principal) : les personnages actifs du manifest (4 modèles Mixamo ; les 10 anciens si manifest["use_legacy"]). Choisir = GameManager.character_id (utilisé par Player),
 ## sauvegardé seulement s'il existe déjà une sauvegarde (sinon gardé en mémoire : new_game() ne le réinitialise pas). Pas d'aperçu 3D dans cet écran :
-## le décor 3D du menu se met à jour à la fermeture (on_closed). [NON TESTÉ DANS GODOT]
+## le menu principal n'affiche plus de personnage. [NON TESTÉ DANS GODOT]
 
 const GENDER := {"m": "Homme", "f": "Femme"}
 
@@ -18,7 +18,8 @@ func _header_info() -> String:
 	return "Actuel : %s" % _pretty(GameManager.character_id)
 
 func _pretty(id: String) -> String:
-	return id.replace("_", " ").capitalize()
+	var label := str(GameManager.character_entry(id).get("label", ""))
+	return label if label != "" else id.replace("_", " ").capitalize()
 
 func _build_content() -> void:
 	var col := UIKit.scroll_column(body, 8)
@@ -28,7 +29,7 @@ func _build_content() -> void:
 func _row(c: Dictionary) -> Control:
 	var id := str(c["id"])
 	var card := PanelContainer.new()
-	var current := id == GameManager.character_id
+	var current := id == GameManager.resolve_character_id(GameManager.character_id)
 	card.add_theme_stylebox_override("panel", UIKit.style(Color(0.3, 0.24, 0.08) if current else UIKit.CARD, UIKit.GOLD if current else Color(1, 1, 1, 0.08), 2 if current else 1))
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 14)

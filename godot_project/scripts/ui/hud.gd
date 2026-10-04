@@ -40,6 +40,29 @@ func setup(p: Player) -> void:
 	p.prompt_changed.connect(func(t: String) -> void: _prompt = t)
 	p.hud_damage_number.connect(_on_damage_number)
 
+var _sees_cache := false
+var _sees_t := 0.0
+
+## Vrai si un policier voit le joueur (les étoiles clignotent quand la police a perdu sa trace).
+func _police_sees() -> bool:
+	var now := Time.get_ticks_msec()
+	if now - _sees_t > 400.0:
+		_sees_t = now
+		_sees_cache = false
+		for c in get_tree().get_nodes_in_group("police"):
+			if c is EnemyController and (c as EnemyController).sees_target(player):
+				_sees_cache = true
+				break
+	return _sees_cache
+
+func _star(c: Vector2, r: float, col: Color) -> void:
+	var pts := PackedVector2Array()
+	for i in 10:
+		var a := -PI * 0.5 + float(i) * PI / 5.0
+		var rr := r if i % 2 == 0 else r * 0.45
+		pts.append(c + Vector2(cos(a), sin(a)) * rr)
+	_panel.draw_colored_polygon(pts, col)
+
 func _on_health() -> void:
 	if player.health < _last_hp - 0.5:
 		_hurt_t = 0.45
@@ -140,6 +163,21 @@ func _draw_hud() -> void:
 		if MissionManager.time_left > 0.0:
 			var tl := int(ceil(MissionManager.time_left))
 			_text("%d:%02d" % [int(tl / 60.0), tl % 60], Vector2(mid - 60.0, MARGIN + 82), 28, Color(1, 0.5, 0.4) if tl <= 30 else Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 120.0)
+	# --- recherche (étoiles) + heure / météo (sous la minimap)
+	var wl := CrimeManager.wanted_level()
+	var sy := MARGIN + _map.size.y + 50.0
+	var env_node := get_tree().get_first_node_in_group("environment")
+	if env_node != null:
+		_text("%s  ·  %s" % [env_node.call("clock_text"), env_node.call("weather_label")], Vector2(vp.x - MARGIN - 330.0, sy), 16, Color(0.85, 0.9, 1.0), HORIZONTAL_ALIGNMENT_RIGHT, 330.0)
+	if wl > 0 or CrimeManager.heat > 0.0:
+		var star_c := vp.x - MARGIN - 20.0
+		for i in 5:
+			var lit := i < wl
+			var blink := lit and wl > 0 and int(Time.get_ticks_msec() / 350) % 2 == 0 and not _police_sees()
+			var col := Color(1.0, 0.85, 0.2) if lit else Color(1, 1, 1, 0.25)
+			if blink:
+				col = Color(1.0, 0.85, 0.2, 0.35)
+			_star(Vector2(star_c - float(4 - i) * 30.0, sy + 34.0), 12.0, col)
 	# --- zone (sous la minimap, 3 s à chaque changement)
 	if _zone_t > 0.0:
 		_text(_zone, Vector2(vp.x - MARGIN - 330.0, MARGIN + _map.size.y + 24.0), 18, Color(1, 1, 1, clampf(_zone_t, 0.0, 1.0)), HORIZONTAL_ALIGNMENT_RIGHT, 330.0)

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="VehicleDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/vehicle_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "heli"
+display_name = "Hélicoptère"
+kind = "heli"
+size = Vector3(1.8, 1.4, 3.6)
+body_color = Color(0.1765, 0.3725, 0.2353, 1)
+max_speed = 28.0
+max_reverse = 6.0
+accel = 7.0
+brake_force = 14.0
+steer_rate = 1.6
+max_hp = 260.0
+seat_x = 0.4
+seat_y = 0.85
+seat_z = 0.35
+climb_rate = 7.0
+price = 0

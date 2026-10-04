@@ -42,11 +42,31 @@ var _melee_busy := false
 func _allowed_ages() -> Array:
 	return ["adulte", "ado"]
 
+## --- points d'extension (PoliceController, GangController) : l'ennemi de mission est la faction « boss ».
+func _groups() -> Array:
+	return ["enemy"]
+
+func _palette() -> Array:
+	return OUTFIT_PALETTE
+
+func _base_hp() -> float:
+	return 60.0 * GameManager.enemy_hp_mult()
+
+## Mort : l'ennemi de mission signale sa mort à MissionManager ; les autres factions non.
+func _report_death(_from: Node) -> void:
+	MissionManager.report_kill(tag)
+
+func _hostile_to_player() -> bool:
+	return CrimeManager.hostile(faction, "player", provoked)
+
 func _setup_role() -> void:
-	add_to_group("enemy")
+	if faction == "civil":
+		faction = "boss"
+	for g in _groups():
+		add_to_group(str(g))
 	collision_layer = 4
 	collision_mask = 1 | 2 | 4 | 8 | 16
-	max_hp = 60.0 * GameManager.enemy_hp_mult()
+	max_hp = _base_hp()
 	def = WeaponManager.get_def(weapon_id)
 	if def == null:
 		def = WeaponManager.get_def("pistol")
@@ -55,7 +75,7 @@ func _setup_role() -> void:
 		weapon.apply_grip(gc.manifest_entry)
 		gc.attach_to_bone(weapon, "RightHand")
 		_mag = def.mag_size
-	randomize_outfit(OUTFIT_PALETTE)
+	randomize_outfit(_palette())
 	home = global_position
 	_idle_face = Vector3.FORWARD.rotated(Vector3.UP, randf() * TAU)
 	if flee_to != Vector3.INF:
@@ -78,7 +98,7 @@ func _player() -> Player:
 
 # ---------------------------------------------------------------- perception
 func _sight_range() -> float:
-	return 16.0 if stealth else 38.0
+	return (16.0 if stealth else 38.0) * CrimeManager.visibility()
 
 func _fov_deg() -> float:
 	return 70.0 if stealth else 130.0
@@ -86,12 +106,34 @@ func _fov_deg() -> float:
 func _targets() -> Array:
 	var out: Array = []
 	var p := _player()
-	if p != null and not p.dead:
+	if p != null and not p.dead and _hostile_to_player():
 		out.append(p)
-	for f in get_tree().get_nodes_in_group("friendly"):
-		if f is Node3D and not bool(f.get("dead")):
-			out.append(f)
+	if faction == "boss":
+		for f in get_tree().get_nodes_in_group("friendly"):
+			if f is Node3D and not bool(f.get("dead")):
+				out.append(f)
+	# autres factions hostiles (police <-> gangs / trafiquants)
+	for n in NPCManager.npcs:
+		var a := n as NPCActor
+		if a == null or a == self or a.dead or a.faction == faction:
+			continue
+		if CrimeManager.hostile(faction, a.faction, provoked):
+			out.append(a)
 	return out
+
+## Vrai si ce PNJ voit la cible (portée, champ de vision, ligne de vue) : utilisé par CrimeManager (la police « voit » le joueur).
+func sees_target(t: Node3D) -> bool:
+	if dead or t == null:
+		return false
+	if _flat_dist(t.global_position) > _sight_range():
+		return false
+	return _los(t)
+
+## Fin d'alerte : retour au calme.
+func stand_down() -> void:
+	target = null
+	if not dead:
+		_set_state(S.IDLE)
 
 func _in_fov(p: Vector3) -> bool:
 	var fwd := Vector3(sin(gc.rotation.y), 0, cos(gc.rotation.y)) if gc != null else Vector3(0, 0, 1)
@@ -168,8 +210,8 @@ func _raise_alarm(t: Node3D) -> void:
 		_alarm_sent = true
 		MissionManager.report_alert()
 	_enter_combat(t)
-	for e in get_tree().get_nodes_in_group("enemy"):
-		if e != self and e is EnemyController and (e as EnemyController).state != S.COMBAT and (e as Node3D).global_position.distance_to(global_position) < 25.0:
+	for e in NPCManager.npcs:
+		if e != self and e is EnemyController and (e as EnemyController).faction == faction and (e as EnemyController).state != S.COMBAT and (e as Node3D).global_position.distance_to(global_position) < 25.0:
 			(e as EnemyController).alert_to(t)
 
 ## Appelé par un allié qui a repéré une cible.
@@ -229,11 +271,14 @@ func _think_flee(_dt: float) -> void:
 	_go(flee_to, sprint_v)
 
 func _think_combat(dt: float) -> void:
+	if target is Player and not _hostile_to_player():
+		stand_down()                     # recherche terminée / plus de provocation : on se calme
+		return
 	if target == null or not is_instance_valid(target) or bool(target.get("dead")):
 		target = _visible_target()
 		if target == null:
 			var p := _player()
-			if p != null and not p.dead and (chase or _lost_t < 4.0):
+			if p != null and not p.dead and _hostile_to_player() and (chase or _lost_t < 4.0):
 				target = p
 			else:
 				_set_state(S.SEARCH)
@@ -300,10 +345,12 @@ func _combat_melee(dist: float, to_dir: Vector3) -> void:
 		_cooldown = 1.1
 		_melee_busy = true
 		if gc != null:
+			var ma: String = gc.melee_anim_for(def.model)
+			anim_hold = gc.duration(ma) * 0.85
 			if gc.tree_active:
-				gc.tree_travel("punch", true)
+				gc.tree_travel(ma, true)
 			else:
-				gc.play("punch", 0.05)
+				gc.play(ma, 0.05)
 		await get_tree().create_timer(0.35).timeout
 		_melee_busy = false
 		if dead or target == null or not is_instance_valid(target) or bool(target.get("dead")):
@@ -348,8 +395,12 @@ func _fire() -> void:
 
 # ---------------------------------------------------------------- réactions
 func hear_noise(pos: Vector3, source: Node) -> void:
-	if dead or source == self or source is EnemyController or source is AllyController:
+	if dead or source == self or source is AllyController:
 		return
+	if source is EnemyController:
+		return
+	if source is Player and (faction == "gang" or faction == "dealer") and not provoked and global_position.distance_to(pos) < 22.0 and randf() < 0.5:
+		provoked = true                     # un coup de feu du joueur à proximité : le gang s'énerve
 	if state == S.IDLE or state == S.PATROL or state == S.SEARCH:
 		if stealth and source is Player:
 			_raise_alarm(source as Node3D)
@@ -361,13 +412,14 @@ func _on_hurt(from: Node, _amount: float) -> void:
 	if state == S.COMBAT or state == S.FLEE:
 		return
 	var t := from as Node3D
-	if t == null:
+	if t == null and faction == "boss":
 		t = _player()
 	if t != null:
 		_raise_alarm(t)
 
 func _on_died(from: Node) -> void:
-	remove_from_group("enemy")
+	for g in _groups():
+		remove_from_group(str(g))
 	if from is Player:
 		GameManager.add_money(randi_range(8, 40))
-	MissionManager.report_kill(tag)
+	_report_death(from)

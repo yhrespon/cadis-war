@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b3dqgdl7hea8d"
+path="res://.godot/imported/mx_remy_1.jpg-dc0cf3e240b709db61221e2bbdb371e5.ctex"
+metadata={
+"vram_texture": false
+}
+generator_parameters={
+"md5": "c43d34cc41e08f09e023d20ed3c07b71"
+}
+
+[deps]
+
+source_file="res://characters/mx_remy_1.jpg"
+dest_files=["res://.godot/imported/mx_remy_1.jpg-dc0cf3e240b709db61221e2bbdb371e5.ctex"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=1

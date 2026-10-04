@@ -69,6 +69,15 @@ func _draw() -> void:
 			var p := _to_map(e3.global_position, o, r, f)
 			if interior.has_point(p):
 				draw_circle(p, 3.0, Color(1.0, 0.25, 0.25))
+	# police (bleu), gangs / trafiquants (orange)
+	for grp in ["police", "gang", "dealer"]:
+		var gcol := Color(0.3, 0.5, 1.0) if grp == "police" else Color(1.0, 0.6, 0.15)
+		for e in get_tree().get_nodes_in_group(grp):
+			var e3 := e as Node3D
+			if e3 != null and e3.is_inside_tree():
+				var p := _to_map(e3.global_position, o, r, f)
+				if interior.has_point(p):
+					draw_circle(p, 3.0, gcol)
 	# objets de mission
 	for n in get_tree().get_nodes_in_group("interactable"):
 		if n is MissionItem:

@@ -13,6 +13,8 @@ var reload_left := 0.0
 var _tracers: Array = []
 var _tracer_mat := StandardMaterial3D.new()
 var attack_timer := 0.0
+var melee_face := NAN          # cap (radians) vers la cible visée automatiquement pendant un coup de mêlée
+var _melee_target: Node3D = null
 
 func setup(player: Player) -> void:
 	p = player
@@ -64,7 +66,7 @@ func update(delta: float, can_act: bool) -> void:
 	var want_fire := Input.is_action_pressed("fire") if (def.auto_fire or def.melee) else Input.is_action_just_pressed("fire")
 	if want_fire and _cooldown <= 0.0 and reload_left <= 0.0:
 		if def.melee:
-			melee_attack(def.damage, 1.7, "punch")
+			melee_attack(def.damage, maxf(1.5, def.range_m + 0.1), p.gc.melee_anim_for(def.model))
 		else:
 			shoot()
 
@@ -114,6 +116,7 @@ func shoot() -> void:
 			_apply_hit(hit, def.damage)
 		_tracer(muzzle_pos, end)
 	NPCManager.emit_noise(muzzle_pos, def.noise_radius, p)
+	CrimeManager.report_crime("gunfire", muzzle_pos, p)
 	AudioManager.play_sfx("shot_" + def.id, "Shots", muzzle_pos)
 	p.add_recoil(def.recoil_deg)
 	SettingsManager.vibrate(18)
@@ -142,7 +145,13 @@ func _assist(origin: Vector3, fwd: Vector3) -> Vector3:
 		return fwd
 	var best: Node3D = null
 	var best_ang := deg_to_rad(2.0 + 6.0 * strength)
-	for e in get_tree().get_nodes_in_group("enemy"):
+	var groups: Array = ["enemy", "gang", "dealer"]
+	if CrimeManager.is_wanted():
+		groups.append("police")
+	var cands: Array = []
+	for g in groups:
+		cands.append_array(get_tree().get_nodes_in_group(str(g)))
+	for e in cands:
 		var n := e as Node3D
 		if n == null or bool(n.get("dead")):
 			continue
@@ -166,36 +175,93 @@ func _spread(dir: Vector3, rad: float) -> Vector3:
 	var r := sqrt(randf()) * rad
 	return (b * Vector3(sin(r) * cos(a), sin(r) * sin(a), -cos(r))).normalized()
 
-## Mêlée : coup de poing/pied/batte sur la cible la plus proche devant le joueur. Retourne true si touché.
+## Mêlée : coup de poing/pied/batte/poignard sur la cible la plus proche devant le joueur.
+## Le poignard joue « stab » (double coup : deux touches à ~20 % et ~60 % de l'animation) ; les autres un seul coup.
 func melee_attack(dmg: float, reach: float, anim: String) -> void:
-	_cooldown = 0.55
+	var stab := anim == "stab"
+	_cooldown = 0.95 if stab else 0.55
 	attack_timer = 0.5
+	# v18 : visée automatique au corps à corps (sur mobile on ne peut pas viser précisément) : on se tourne vers la cible la plus proche
+	_melee_target = _nearest_melee_target(reach + 1.8)
+	melee_face = NAN
+	if _melee_target != null:
+		var to := _melee_target.global_position - p.global_position
+		melee_face = atan2(to.x, to.z)
 	p.start_melee(anim)
-	var delay := p.gc.duration(anim) * 0.4
-	await get_tree().create_timer(delay).timeout
-	if not is_instance_valid(p) or p.dead:
+	var dur: float = p.gc.duration(anim)
+	if stab:
+		await get_tree().create_timer(dur * 0.22).timeout
+		_melee_hit(dmg, reach)
+		await get_tree().create_timer(dur * 0.38).timeout
+		_melee_hit(dmg, reach)
 		return
-	var fwd := Basis(Vector3.UP, p.face_yaw) * Vector3(0, 0, 1)
+	await get_tree().create_timer(dur * 0.3).timeout
+	if not _melee_hit(dmg, reach):
+		await get_tree().create_timer(dur * 0.15).timeout      # cible qui bouge : deuxième essai
+		_melee_hit(dmg, reach)
+
+## Cible de mêlée valide (vivante, touchable, pas un allié) : renvoie la distance horizontale au joueur, ou -1.
+func _melee_dist(t: Node3D) -> float:
+	if t == null or not is_instance_valid(t) or t == p or not t.has_method("take_damage") or bool(t.get("dead")):
+		return -1.0
+	if str(t.get("faction")) == "friend" or t.is_in_group("friendly"):
+		return -1.0
+	var to := t.global_position - p.global_position
+	if absf(to.y) > 2.2:
+		return -1.0
+	to.y = 0.0
+	return to.length()
+
+func _melee_candidates() -> Array:
+	var out: Array = []
+	for n in NPCManager.npcs:
+		if is_instance_valid(n):
+			out.append(n)
+	for n in get_tree().get_nodes_in_group("damageable"):
+		if not out.has(n):
+			out.append(n)
+	return out
+
+## PNJ le plus proche dans un grand cône devant la caméra (ou très proche, quelle que soit la direction).
+func _nearest_melee_target(max_d: float) -> Node3D:
+	var cam_fwd := Basis(Vector3.UP, p.yaw + PI) * Vector3(0, 0, 1)
 	var best: Node3D = null
-	var best_d := reach
-	for g in ["enemy", "civilian", "damageable"]:
-		for n in get_tree().get_nodes_in_group(g):
-			var t := n as Node3D
-			if t == null or t == p or not t.has_method("take_damage") or bool(t.get("dead")):
-				continue
-			var to := t.global_position - p.global_position
-			to.y = 0.0
-			var d := to.length()
-			if d < best_d and (d < 0.4 or fwd.dot(to.normalized()) > 0.4):
-				best_d = d
-				best = t
+	var best_d := max_d
+	for n in _melee_candidates():
+		var t := n as Node3D
+		var d := _melee_dist(t)
+		if d < 0.0 or d > best_d:
+			continue
+		var to := t.global_position - p.global_position
+		to.y = 0.0
+		if d > 1.2 and cam_fwd.dot(to.normalized()) < -0.1:
+			continue
+		best_d = d
+		best = t
+	return best
+
+## Renvoie true si une cible a été touchée.
+func _melee_hit(dmg: float, reach: float) -> bool:
+	if not is_instance_valid(p) or p.dead:
+		return false
+	var best: Node3D = null
+	# 1) la cible verrouillée au début du coup, si elle est encore à portée
+	if _melee_target != null and _melee_dist(_melee_target) >= 0.0 and _melee_dist(_melee_target) <= reach + 1.4:
+		best = _melee_target
+	# 2) sinon la plus proche autour de nous (portée généreuse : rayon de la capsule + marge)
+	if best == null:
+		best = _nearest_melee_target(reach + 1.0)
 	if best != null:
 		best.call("take_damage", dmg, p, false)
+		if SettingsManager.get_value("gameplay", "show_damage"):
+			p.hud_damage_number.emit(best.global_position + Vector3(0, 1.5, 0), dmg, false)
+		p.add_recoil(1.2)
 		NPCManager.emit_noise(best.global_position, 10.0, p)
 		AudioManager.play_sfx("melee_hit", "Impacts", best.global_position)
 		SettingsManager.vibrate(25)
-	else:
-		AudioManager.play_sfx("melee_swing", "Impacts", p.global_position)
+		return true
+	AudioManager.play_sfx("melee_swing", "Impacts", p.global_position)
+	return false
 
 func _tracer(a: Vector3, b: Vector3) -> void:
 	var seg := a.distance_to(b)

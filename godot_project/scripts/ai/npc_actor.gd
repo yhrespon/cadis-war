@@ -12,6 +12,8 @@ const GRAVITY := 20.0
 
 @export var char_id := ""
 var display_name := ""
+var faction := "civil"          # civil | police | gang | dealer | boss | friend (voir CrimeManager.hostile)
+var provoked := false           # a été attaqué par le joueur / dérangé : devient hostile au joueur (gang, trafiquants)
 var max_hp := 60.0
 var hp := 60.0
 var dead := false
@@ -24,6 +26,7 @@ var run_v := 3.6
 var sprint_v := 5.2
 var corpse_time := 8.0
 var hold_anim := ""            # animation de base maintenue (ex. « crouch »), vide = locomotion
+var anim_hold := 0.0           # secondes pendant lesquelles _play_loco() ne ramène pas à la locomotion (coup de mêlée en cours)
 
 var _want_dir := Vector3.ZERO
 var _want_speed := 0.0
@@ -38,6 +41,7 @@ var _layer := 0
 var _asleep := false
 var _cs: CollisionShape3D = null
 var _loco_name := ""
+var _var_scale := 1.0
 static var _tracer_mat: StandardMaterial3D = null
 
 # ---------------------------------------------------------------- construction
@@ -55,11 +59,22 @@ static func pick_character(ages: Array) -> String:
 func _allowed_ages() -> Array:
 	return ["adulte", "ado"]
 
+## Modèles préférés pour ce rôle (ex. policier : mx_remy / mx_ch21, tenue recolorable) ; vide = au hasard parmi les âges permis.
+func _preferred_chars() -> Array:
+	return []
+
+## Crime commis par le JOUEUR en frappant ce PNJ : « assault » / « murder » / « cop_assault » / « cop_murder » ou "" (aucun).
+func _crime_kind(_killed: bool) -> String:
+	return ""
+
 func _ready() -> void:
 	if char_id == "":
-		char_id = pick_character(_allowed_ages())
+		var ids: Array = GameManager.character_ids()
+		var ok: Array = _preferred_chars().filter(func(i: Variant) -> bool: return ids.has(i))
+		char_id = str(ok[randi() % ok.size()]) if not ok.is_empty() else pick_character(_allowed_ages())
 	var entry := GameManager.character_entry(char_id)
-	height = float(entry["height_m"])
+	_var_scale = randf_range(0.94, 1.06)   # tailles légèrement variées (4 modèles seulement)
+	height = float(entry["height_m"]) * _var_scale
 	var sc := clampf(height / 1.75, 0.55, 1.0)
 	var cap := CapsuleShape3D.new()
 	cap.radius = 0.28 * clampf(sc, 0.7, 1.0)
@@ -70,6 +85,7 @@ func _ready() -> void:
 	add_child(_cs)
 
 	gc = GameCharacter.new()
+	gc.scale = Vector3.ONE * _var_scale
 	add_child(gc)
 	if gc.setup(entry):
 		gc.apply_root_motion = false
@@ -83,11 +99,23 @@ func _ready() -> void:
 		sprint_v = s if s > run_v else sprint_v
 	else:
 		push_error("NPC : personnage %s non chargé" % char_id)
+	_lighten_render()
 	_setup_role()
 	hp = max_hp
 	_layer = collision_layer
 	_last_pos = global_position
 	NPCManager.register(self)
+
+## v18 : allègement du rendu : pas d'ombre projetée par les PNJ, et masqués au-delà de 70 m.
+func _lighten_render() -> void:
+	if gc == null or gc.model == null:
+		return
+	for m in gc._find_meshes(gc.model):
+		var mi := m as MeshInstance3D
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mi.visibility_range_end = 70.0
+		mi.visibility_range_end_margin = 6.0
+		mi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
 
 ## À surcharger : groupes, couches de collision, points de vie, arme.
 func _setup_role() -> void:
@@ -118,6 +146,7 @@ func _think(_dt: float) -> void:
 	pass
 
 func _move(delta: float) -> void:
+	anim_hold = maxf(0.0, anim_hold - delta)
 	var dir := _want_dir
 	var spd := _want_speed
 	if _stagger > 0.0:
@@ -185,6 +214,8 @@ func _play_loco() -> void:
 	if gc == null or gc.model == null or dead:
 		return
 	if gc.tree_active:
+		if anim_hold > 0.0:
+			return
 		if hold_anim != "":
 			if gc.current_base_state() != hold_anim:
 				gc.play(hold_anim)
@@ -229,6 +260,12 @@ func take_damage(amount: float, from: Node = null, _head := false) -> void:
 	if dead or amount <= 0.0:
 		return
 	hp -= amount
+	if from is Player:
+		provoked = true
+		var kind := _crime_kind(hp <= 0.0)
+		if kind != "":
+			CrimeManager.report_crime(kind, global_position, from)
+	VoiceManager.react(self)
 	_on_hurt(from, amount)
 	if hp <= 0.0:
 		_die(from)

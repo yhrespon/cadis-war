@@ -1,76 +1,156 @@
 extends Node3D
 ## Écran principal de C.A.D.I.S WARS. Histoire, Mission secrète, Personnage, Magasins, Paramètres, Crédits : écrans réels ; Online : verrouillé (« Bientôt disponible »).
-## Décor : un des personnages fournis (idle), à l'échelle réelle (1,75 m), qui change toutes les 6 s.
+## Décor : vidéo de fond en boucle « ville la nuit » (art/menu_bg.ogv, 10 s, titre C.A.D.I.S WARS incrusté dans l'image) ; affiche fixe art/menu_bg.png dessous.
+## Les boutons sont centrés sous le titre. Plus de personnage ni de titre en texte sur l'écran principal.
 
 const GAME_TITLE := "C.A.D.I.S WARS"
 const ENTRIES := ["Histoire", "Mission secrète", "Online", "Personnage", "Magasins", "Paramètres", "Crédits"]
 
-var manifest: Dictionary
-var _char: GameCharacter
-var _idx := 0
+const BG_POSTER := "res://art/menu_bg.png"      # affiche fixe (image 1280x720 avec le titre)
+const BG_VIDEO := "res://art/menu_bg.ogv"        # boucle vidéo Theora 1280x720
+const VID_W := 1280.0
+const VID_H := 720.0
+const TITLE_BOTTOM := 245.0                      # bas du titre dans l'image (px sur 720) : les boutons commencent juste dessous
+const MENU_W := 380.0
+
+var _holder: Control
+var _poster: TextureRect
+var _video: VideoStreamPlayer
+var _veil: TextureRect
+var _menu_box: VBoxContainer
 var _popup: PanelContainer
 var _popup_label: Label
 var _popup_box: VBoxContainer
 var _story_buttons: Array = []
-var _timer: Timer
 
 func _ready() -> void:
 	SaveManager.load_latest_profile()      # menus/magasins affichent l'état réel de la dernière sauvegarde
 	UIManager.push_back(_on_back)
-	manifest = GameCharacter.load_manifest()
-	_build_scene()
 	_build_ui()
-	_show_character(randi() % manifest["characters"].size())
-	_timer = Timer.new()
-	_timer.wait_time = 6.0
-	_timer.autostart = true
-	_timer.timeout.connect(func() -> void: _show_character((_idx + 1) % manifest["characters"].size()))
-	add_child(_timer)
+	OnlineManager.status_changed.connect(_on_online_status)
+	OnlineManager.room_changed.connect(_on_online_room)
+	OnlineManager.match_started.connect(_on_online_match_started)
+	AudioManager.play_music("menu")
 
-func _build_scene() -> void:
-	var env := WorldEnvironment.new()
-	var e := Environment.new()
-	e.background_mode = Environment.BG_COLOR
-	e.background_color = Color(0.07, 0.08, 0.12)
-	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.6, 0.62, 0.75)
-	e.ambient_light_energy = 0.7
-	env.environment = e
-	add_child(env)
-	var key := DirectionalLight3D.new()
-	key.rotation_degrees = Vector3(-30, -35, 0)
-	key.light_energy = 1.2
-	add_child(key)
-	var rim := OmniLight3D.new()
-	rim.position = Vector3(1.5, 1.8, -1.5)
-	rim.light_color = Color(0.4, 0.6, 1.0)
-	rim.omni_range = 6.0
-	add_child(rim)
-	var cam := Camera3D.new()
-	cam.position = Vector3(-0.9, 1.15, 3.4)     # personnage décalé à droite de l'écran, boutons à gauche
-	cam.rotation_degrees = Vector3(-3, -8, 0)
-	cam.fov = 40.0
-	add_child(cam)
-	cam.current = true
+func _exit_tree() -> void:
+	if _video != null and is_instance_valid(_video):
+		_video.stop()
+		_video.stream = null
 
-func _show_character(i: int) -> void:
-	_idx = i
-	if _char != null:
-		_char.queue_free()
-	_char = GameCharacter.new()
-	_char.apply_root_motion = false
-	add_child(_char)
-	if _char.setup(manifest["characters"][i]):
-		# Le personnage est orienté vers +Z ; la caméra de prévisualisation est placée côté +Z.
-		_char.rotation_degrees.y = 0.0
-		_char.play("idle", 0.0)
+## Fond : affiche + vidéo en boucle, recadrés « cover » (échelle = max des deux rapports, aligné en haut pour que le titre reste en place).
+func _build_background(root: Control) -> void:
+	_holder = root
+	_holder.clip_contents = true
+	var back := ColorRect.new()                       # secours si ni affiche ni vidéo ne se chargent
+	back.set_anchors_preset(Control.PRESET_FULL_RECT)
+	back.color = Color(0.05, 0.06, 0.15)
+	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(back)
+	if ResourceLoader.exists(BG_POSTER):
+		_poster = TextureRect.new()
+		_poster.texture = load(BG_POSTER)
+		_poster.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_poster.stretch_mode = TextureRect.STRETCH_SCALE
+		_poster.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		root.add_child(_poster)
+	else:
+		push_warning("Affiche du menu introuvable : " + BG_POSTER)
+	if ResourceLoader.exists(BG_VIDEO):
+		var vs = load(BG_VIDEO)
+		if vs != null:
+			_video = VideoStreamPlayer.new()
+			_video.stream = vs
+			_video.expand = true
+			_video.loop = true
+			_video.autoplay = true
+			_video.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_video.finished.connect(func() -> void: _video.play())      # filet de sécurité si `loop` ne relance pas
+			root.add_child(_video)
+	else:
+		push_warning("Vidéo du menu introuvable : " + BG_VIDEO)
+	# halo sombre en ellipse derrière les boutons (lisibilité sans bord net)
+	var g := Gradient.new()
+	g.set_color(0, Color(0.02, 0.03, 0.07, 0.66))
+	g.add_point(0.5, Color(0.02, 0.03, 0.07, 0.5))
+	g.set_color(g.get_point_count() - 1, Color(0.02, 0.03, 0.07, 0.0))
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.5)
+	gt.fill_to = Vector2(1.0, 0.5)
+	gt.width = 256
+	gt.height = 256
+	_veil = TextureRect.new()
+	_veil.texture = gt
+	_veil.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_veil.stretch_mode = TextureRect.STRETCH_SCALE
+	_veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_veil)
+	_add_rain(root)
+	root.resized.connect(_layout)
+	_layout.call_deferred()
+
+## v17 : pluie par-dessus la ville (si la dernière partie finissait sous la pluie / l'orage, sinon 1 lancement sur 3).
+## Aucun personnage sur l'écran principal : seulement la ville (immeubles, maisons, voitures, jour/nuit/pluie) comme dans le jeu.
+func _add_rain(root: Control) -> void:
+	var rainy := GameManager.world_weather == "rain" or GameManager.world_weather == "storm" or randf() < 0.33
+	if not rainy:
+		return
+	var img := Image.create(2, 28, false, Image.FORMAT_RGBA8)
+	for y in 28:
+		var a := float(y) / 27.0
+		for x in 2:
+			img.set_pixel(x, y, Color(0.75, 0.85, 1.0, a * 0.55))
+	var p2 := GPUParticles2D.new()
+	p2.name = "MenuRain"
+	p2.texture = ImageTexture.create_from_image(img)
+	p2.amount = 380
+	p2.lifetime = 0.75
+	p2.preprocess = 0.75
+	p2.position = Vector2(640, -30)
+	p2.visibility_rect = Rect2(-900, -60, 1800, 900)
+	var pm := ParticleProcessMaterial.new()
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	pm.emission_box_extents = Vector3(900, 1, 1)
+	pm.direction = Vector3(0.12, 1.0, 0.0)
+	pm.spread = 3.0
+	pm.initial_velocity_min = 1000.0
+	pm.initial_velocity_max = 1250.0
+	pm.gravity = Vector3.ZERO
+	p2.process_material = pm
+	root.add_child(p2)
+
+## Place fond, halo et colonne de boutons selon la taille réelle de l'écran.
+func _layout() -> void:
+	if _holder == null:
+		return
+	var vs := _holder.size
+	if vs.x < 1.0 or vs.y < 1.0:
+		return
+	var s := maxf(vs.x / VID_W, vs.y / VID_H)
+	var sz := Vector2(VID_W, VID_H) * s
+	var pos := Vector2((vs.x - sz.x) * 0.5, 0.0)
+	for c in [_poster, _video]:
+		if c != null:
+			c.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			c.position = pos
+			c.size = sz
+	var top := TITLE_BOTTOM * s + 14.0
+	if _menu_box != null:
+		_menu_box.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		_menu_box.size = Vector2(MENU_W, 10.0)       # la hauteur se réduit au minimum du contenu
+		_menu_box.position = Vector2((vs.x - MENU_W) * 0.5, top)
+	if _veil != null:
+		_veil.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		_veil.size = Vector2(MENU_W + 360.0, maxf(vs.y - top + 120.0, 100.0))
+		_veil.position = Vector2((vs.x - _veil.size.x) * 0.5, top - 60.0)
 
 func _menu_button(text: String) -> Button:
 	# Style « tactique » : coins diagonaux (haut-droit et bas-gauche arrondis, les deux autres vifs) + liseré doré au survol. Pas de vrais parallélogrammes.
-	var b := UIKit.button(text, Color(0.1, 0.11, 0.16, 0.92), 54.0)
-	b.custom_minimum_size = Vector2(380, 54)
-	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.add_theme_font_size_override("font_size", 25)
+	var b := UIKit.button(text, Color(0.1, 0.11, 0.16, 0.86), 44.0)
+	b.custom_minimum_size = Vector2(MENU_W, 44)
+	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.add_theme_font_size_override("font_size", 23)
 	for sname in ["normal", "hover", "pressed", "focus"]:
 		var sb := b.get_theme_stylebox(sname) as StyleBoxFlat
 		if sb == null:
@@ -80,7 +160,9 @@ func _menu_button(text: String) -> Button:
 		sb.corner_radius_bottom_right = 0
 		sb.corner_radius_top_right = 20
 		sb.corner_radius_bottom_left = 20
-		sb.content_margin_left = 26
+		sb.content_margin_left = 8
+		sb.content_margin_top = 4
+		sb.content_margin_bottom = 4
 		if sname == "normal":
 			sb.border_width_left = 6
 			sb.border_color = Color(1.0, 0.82, 0.25, 0.9)
@@ -93,76 +175,27 @@ func _build_ui() -> void:
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	layer.add_child(root)
-	# voile dégradé à gauche pour la lisibilité des boutons sur le décor 3D
-	var grad := Gradient.new()
-	grad.set_color(0, Color(0.02, 0.03, 0.06, 0.92))
-	grad.set_color(1, Color(0.02, 0.03, 0.06, 0.0))
-	var gt := GradientTexture2D.new()
-	gt.gradient = grad
-	gt.fill_from = Vector2(0, 0)
-	gt.fill_to = Vector2(1, 0)
-	var veil := TextureRect.new()
-	veil.texture = gt
-	veil.stretch_mode = TextureRect.STRETCH_SCALE
-	veil.set_anchors_preset(Control.PRESET_LEFT_WIDE)
-	veil.offset_right = 620
-	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(veil)
-	var box := VBoxContainer.new()
-	box.set_anchors_preset(Control.PRESET_LEFT_WIDE)
-	box.offset_left = 60
-	box.offset_right = 470
-	box.offset_top = 24
-	box.offset_bottom = -24
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	box.add_theme_constant_override("separation", 9)
-	root.add_child(box)
-	var title := Label.new()
-	title.text = "C.A.D.I.S"
-	title.add_theme_font_size_override("font_size", 66)
-	title.add_theme_color_override("font_color", Color(1.0, 0.82, 0.25))
-	title.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
-	title.add_theme_constant_override("outline_size", 10)
-	box.add_child(title)
-	var title2 := Label.new()
-	title2.text = "WARS"
-	title2.add_theme_font_size_override("font_size", 40)
-	title2.add_theme_color_override("font_color", Color(0.95, 0.95, 0.98))
-	title2.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
-	title2.add_theme_constant_override("outline_size", 8)
-	box.add_child(title2)
-	var line := ColorRect.new()
-	line.color = Color(1.0, 0.82, 0.25, 0.9)
-	line.custom_minimum_size = Vector2(300, 3)
-	box.add_child(line)
+	_build_background(root)
+	_menu_box = VBoxContainer.new()
+	_menu_box.alignment = BoxContainer.ALIGNMENT_BEGIN
+	_menu_box.add_theme_constant_override("separation", 6)
+	root.add_child(_menu_box)
 	var sub := Label.new()
-	sub.text = "Version de développement  ·  %d $" % GameManager.money
-	sub.add_theme_color_override("font_color", Color(0.7, 0.75, 0.85))
-	box.add_child(sub)
+	sub.text = "Version 0.15  ·  %d $" % GameManager.money
+	sub.add_theme_font_size_override("font_size", 16)
+	sub.add_theme_color_override("font_color", Color(0.72, 0.76, 0.88, 0.85))
+	sub.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
+	sub.add_theme_constant_override("outline_size", 4)
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sub.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	sub.offset_top = -34.0
+	sub.offset_bottom = -8.0
+	sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(sub)
 	for n in ENTRIES:
 		var b := _menu_button(n)
 		b.pressed.connect(_on_entry.bind(n))
-		box.add_child(b)
-	var credit := Label.new()
-	credit.text = "Modèle de personnage : « Fuse personnage » (1831251), CC-BY-4.0 — voir Crédits"
-	credit.add_theme_font_size_override("font_size", 12)
-	credit.add_theme_color_override("font_color", Color(0.55, 0.6, 0.7))
-	credit.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	credit.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	credit.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	credit.offset_right = -16
-	credit.offset_bottom = -10
-	root.add_child(credit)
-	if OS.is_debug_build():      # niveau de test technique : visible seulement dans une build de debug
-		var dev := Button.new()
-		dev.text = "Niveau de test (dev)"
-		dev.flat = true
-		dev.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-		dev.grow_vertical = Control.GROW_DIRECTION_BEGIN
-		dev.offset_left = 16
-		dev.offset_bottom = -6
-		dev.pressed.connect(_start_test)
-		root.add_child(dev)
+		_menu_box.add_child(b)
 	_popup = PanelContainer.new()
 	_popup.set_anchors_preset(Control.PRESET_CENTER)
 	_popup.grow_horizontal = Control.GROW_DIRECTION_BOTH
@@ -192,9 +225,7 @@ func _on_entry(n: String) -> void:
 		SettingsUI.open(self)
 		return
 	if n == "Personnage":
-		CharacterUI.open(self, func() -> void:
-			_timer.stop()
-			_show_character(maxi(0, GameManager.character_ids().find(GameManager.character_id))))
+		CharacterUI.open(self, func() -> void: pass)      # plus de personnage affiché sur l'écran principal
 		return
 	if n == "Crédits":
 		CreditsUI.open(self)
@@ -211,10 +242,41 @@ func _on_entry(n: String) -> void:
 		_popup_label.add_theme_font_size_override("font_size", 22)
 		_add_story_button("Commencer", func() -> void: GameManager.start_secret_mission())
 	elif n == "Online":
-		_popup_label.text = "Multijoueur – Bientôt disponible\n\nAucune connexion n'est établie."
+		_open_online_lobby()
 	else:
 		_popup_label.text = "%s\n\nEncore en développement" % n
 	_popup.visible = true
+
+func _open_online_lobby() -> void:
+	_popup_label.text = "ONLINE — SALONS ET DUELS\n\nServeur : cadis-war.up.railway.app\n2 à 6 joueurs · campagne coop · duels · clans"
+	_popup_label.add_theme_font_size_override("font_size", 22)
+	_add_story_button("Créer un salon campagne — 2 joueurs", func() -> void: OnlineManager.create_room("campaign", 2))
+	_add_story_button("Créer un salon campagne — 6 joueurs", func() -> void: OnlineManager.create_room("campaign", 6))
+	_add_story_button("Créer un duel par équipes", func() -> void: OnlineManager.create_room("team_duel", 2))
+	_add_story_button("Créer un duel solo", func() -> void: OnlineManager.create_room("solo_duel", 2))
+	var code_input := LineEdit.new()
+	code_input.placeholder_text = "Code du salon (ex. A1B2C3)"
+	code_input.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	code_input.custom_minimum_size = Vector2(0, 46)
+	_popup_box.add_child(code_input)
+	_popup_box.move_child(code_input, _popup_box.get_child_count() - 2)
+	_add_story_button("Rejoindre le salon", func() -> void: OnlineManager.join_room(code_input.text))
+	_add_story_button("Recherche duel + IA de secours", func() -> void: OnlineManager.search_player("solo_duel"))
+	_add_story_button("Créer mon clan CADIS", func() -> void: OnlineManager.create_clan("Clan CADIS", "CADIS"))
+
+func _on_online_status(text: String) -> void:
+	if _popup_label != null and _popup.visible:
+		_popup_label.text = "ONLINE\n\n" + text
+
+func _on_online_room(r: Dictionary) -> void:
+	if _popup_label != null and _popup.visible:
+		_popup_label.text = "SALON %s\n\nJoueurs : %d/%d\nPartage ce code à tes équipiers, puis valide le lancement." % [r.get("code", ""), r.get("players", []).size(), r.get("maxPlayers", 2)]
+		_add_story_button("Valider / démarrer", func() -> void: OnlineManager.start_room())
+
+func _on_online_match_started(match: Dictionary) -> void:
+	var has_bot := bool(match.get("botFallback", false))
+	_popup_label.text = "MATCH LANCÉ\n\n%s\n%s" % ["Adversaire IA local" if has_bot else "Joueurs connectés", "La scène de combat online sera chargée dans la prochaine étape."]
+	SettingsManager.vibrate(90)
 
 func _add_story_button(text: String, cb: Callable) -> void:
 	var b := UIKit.button(text, Color(0.15, 0.4, 0.2), 56.0)

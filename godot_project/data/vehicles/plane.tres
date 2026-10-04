@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VehicleDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/vehicle_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "plane"
+display_name = "Avion"
+kind = "plane"
+size = Vector3(9.0, 1.2, 6.0)
+body_color = Color(0.902, 0.902, 0.9216, 1)
+max_speed = 44.0
+max_reverse = 3.0
+accel = 8.0
+brake_force = 14.0
+steer_rate = 1.0
+max_hp = 200.0
+seat_x = 0.0
+seat_y = 0.95
+seat_z = 0.3
+lift_speed = 20.0
+climb_rate = 7.0
+price = 0

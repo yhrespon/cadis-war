@@ -3,9 +3,11 @@
   "pistol",
   "smg",
   "shotgun",
-  "bat"
+  "bat",
+  "dagger"
  ],
  "items": [
+  "w_dagger",
   "w_pistol",
   "w_smg",
   "w_shotgun",
@@ -33,7 +35,11 @@
  "vehicles": [
   "sedan",
   "van",
-  "sport"
+  "sport",
+  "moto",
+  "truck",
+  "heli",
+  "plane"
  ],
  "cities": [
   "port_alpha",

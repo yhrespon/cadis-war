@@ -5,6 +5,8 @@ extends BasePanel
 
 const MODEL_CREDIT := "This work is based on \"Fuse personnage\" (https://sketchfab.com/3d-models/fuse-personnage-826c65a1832d45a7a72e107a20f26864) by 1831251 (https://sketchfab.com/1831251) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)"
 
+const MIXAMO_CREDIT := "Personnages Remy, Brute, Eve By J. Gonzales et Ch21 : Adobe Mixamo (mixamo.com), © Adobe. Modèles réduits et convertis pour le jeu."
+
 static func open(host: Node) -> void:
 	BasePanel.show_panel(host, CreditsUI.new())
 
@@ -15,7 +17,9 @@ func _build_content() -> void:
 	var col := UIKit.scroll_column(body, 14)
 	col.add_child(UIKit.label("C.A.D.I.S WARS", 40, UIKit.GOLD))
 	col.add_child(UIKit.label("Version de développement", 20, Color(0.7, 0.75, 0.85)))
-	col.add_child(UIKit.label("Modèle de personnage", 26, UIKit.GOLD))
+	col.add_child(UIKit.label("Personnages", 26, UIKit.GOLD))
+	col.add_child(UIKit.label(MIXAMO_CREDIT, 20, Color(0.9, 0.9, 0.95)))
+	col.add_child(UIKit.label("Modèle de personnage (anciens personnages)", 26, UIKit.GOLD))
 	col.add_child(UIKit.label(MODEL_CREDIT, 20, Color(0.9, 0.9, 0.95)))
-	col.add_child(UIKit.label("Les personnages du jeu (têtes, cheveux, vêtements, animations) sont dérivés de ce modèle par traitement procédural.", 20, Color(0.75, 0.78, 0.85)))
+	col.add_child(UIKit.label("Les anciens personnages (désactivés par défaut, conservés en secours) sont dérivés de ce modèle par traitement procédural ; les animations des nouveaux personnages en sont reprises.", 20, Color(0.75, 0.78, 0.85)))
 	col.add_child(UIKit.label("Moteur : Godot Engine 4 (licence MIT).", 20, Color(0.75, 0.78, 0.85)))

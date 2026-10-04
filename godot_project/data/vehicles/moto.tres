@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="VehicleDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/vehicle_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "moto"
+display_name = "Moto"
+kind = "moto"
+size = Vector3(0.6, 0.6, 2.0)
+body_color = Color(0.098, 0.098, 0.1373, 1)
+max_speed = 30.0
+accel = 14.0
+steer_rate = 2.4
+max_hp = 90.0
+seat_x = 0.0
+seat_y = 0.72
+seat_z = -0.15
+price = 0

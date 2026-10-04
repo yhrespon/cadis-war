@@ -9,6 +9,8 @@ extends Node3D
 
 const LOCO_STATES: Array = ["idle", "walk", "run", "sprint"]
 const BASE_STATES: Array = ["crouch", "roll", "damage", "death", "drive", "interact", "dance", "kick", "punch"]
+## Animations facultatives (absentes des anciens modèles « legacy ») : ajoutées à l'arbre si le GLB les contient (v17 : « stab », poignard).
+const OPTIONAL_STATES: Array = ["stab"]
 const OUTFIT_SHADER := """
 shader_type spatial;
 render_mode cull_disabled;
@@ -116,6 +118,16 @@ func anim_distance(anim_name: String) -> float:
 	var d: Array = rm["distance_m"]
 	return Vector2(float(d[0]), float(d[2])).length()
 
+## true si le modèle possède cette animation (les anciens modèles n'ont pas « stab »).
+func has_anim(anim_name: String) -> bool:
+	return manifest_entry.has("animations") and Dictionary(manifest_entry["animations"]).has(anim_name)
+
+## Animation d'attaque de mêlée adaptée à l'arme (poignard -> « stab » si le modèle l'a, sinon « punch »).
+func melee_anim_for(weapon_model: String) -> String:
+	if weapon_model == "dagger" and has_anim("stab"):
+		return "stab"
+	return "punch"
+
 func animation_names() -> Array:
 	return manifest_entry["animations"].keys()
 
@@ -128,7 +140,11 @@ func _anim_node(n: String) -> AnimationNodeAnimation:
 func build_tree() -> bool:
 	if player == null:
 		return false
-	for n in LOCO_STATES + BASE_STATES + ["jump", "shoot", "reload"]:
+	var base_states: Array = BASE_STATES.duplicate()
+	for opt in OPTIONAL_STATES:
+		if player.has_animation(opt):
+			base_states.append(opt)
+	for n in LOCO_STATES + base_states + ["jump", "shoot", "reload"]:
 		if not player.has_animation(n):
 			push_error("Animation manquante pour l'arbre : %s" % n)
 			return false
@@ -169,12 +185,12 @@ func build_tree() -> bool:
 	climb_bt.connect_node("output", 0, "scale")
 
 	var base := AnimationNodeStateMachine.new()
-	var names: Array = ["loco", "jump", "climb"] + BASE_STATES
+	var names: Array = ["loco", "jump", "climb"] + base_states
 	base.add_node("loco", loco, Vector2(0, 0))
 	base.add_node("jump", jump_bt, Vector2(200, 0))
 	base.add_node("climb", climb_bt, Vector2(400, 0))
 	var i := 3
-	for n in BASE_STATES:
+	for n in base_states:
 		base.add_node(n, _anim_node(n), Vector2(200 * (i % 4), 120 * (i >> 2)))
 		i += 1
 	for a in names:
@@ -297,6 +313,7 @@ func apply_outfit(top: Variant, bottom: Variant, hair: Variant) -> void:
 		return
 	var tiles: Dictionary = manifest_entry.get("outfit_tiles", {})
 	if tiles.is_empty():
+		_apply_tint(top, bottom, hair)   # modèles Mixamo : teinte par matériau (pas d'atlas à pastilles)
 		return
 	if _shader == null:
 		_shader = Shader.new()
@@ -334,6 +351,33 @@ func apply_outfit(top: Variant, bottom: Variant, hair: Variant) -> void:
 		flags.z = 1.0
 		_outfit_mat.set_shader_parameter("hair_col", hair)
 	_outfit_mat.set_shader_parameter("use_flags", flags)
+
+## Teinte par matériau (modèles Mixamo) : multiplie la couleur d'albedo des matériaux listés dans manifest["tint_materials"][top|bottom|hair].
+## null = couleur d'origine (blanc). Les modèles sans matériau séparé (ex. mx_eve) ne sont pas recolorables : l'appel ne fait rien, sans erreur.
+func _apply_tint(top: Variant, bottom: Variant, hair: Variant) -> void:
+	var groups: Dictionary = manifest_entry.get("tint_materials", {})
+	if groups.is_empty():
+		return
+	var wanted := {"top": top, "bottom": bottom, "hair": hair}
+	for mi in _find_meshes(model):
+		var m := mi as MeshInstance3D
+		if m.mesh == null:
+			continue
+		for i in m.mesh.get_surface_count():
+			var base := m.mesh.surface_get_material(i)
+			if base == null:
+				continue
+			for k in wanted:
+				if not groups.has(k) or not Array(groups[k]).has(base.resource_name):
+					continue
+				var src: Material = m.get_surface_override_material(i)
+				if src == null:
+					src = base.duplicate() as Material
+					m.set_surface_override_material(i, src)
+				var bm := src as BaseMaterial3D
+				if bm != null:
+					var c: Variant = wanted[k]
+					bm.albedo_color = c if c is Color else Color.WHITE
 
 func apply_inventory_outfit() -> void:
 	apply_outfit(InventoryManager.outfit_color("top"), InventoryManager.outfit_color("bottom"), InventoryManager.outfit_color("hair"))

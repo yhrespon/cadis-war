@@ -1,4 +1,4 @@
-# Intégration Godot 4.3 — C.A.D.I.S WARS v13
+# Intégration Godot 4.3 — C.A.D.I.S WARS v17
 
 ## Ouvrir / lancer
 
@@ -7,6 +7,10 @@ Ouvrir `godot_project/project.godot` avec **Godot 4.3**. Le premier import des 1
 - **F5** démarre `main_menu.tscn` (scène principale) : Histoire / Mission secrète / Personnage / Magasins / Paramètres / Crédits.
 - `game.tscn` est la scène de jeu (`GameManager.mode` : `story`, `secret` ou `test`).
 - `main.tscn` est la visionneuse de personnages (un bouton par animation) : utiliser « Lancer cette scène ».
+
+## Test de circulation v17
+
+Lancer depuis la racine du dépôt : `godot --path godot_project res://tests/traffic_integration.tscn` (Godot **4.3** requis). Le test démarre réellement `game.tscn` en mission secrète, vérifie les feux visibles et le trafic, mesure l’arrêt d’une voiture à un feu rouge, puis observe un véhicule bloqué qui devient fantôme après 7 s et retrouve son masque de collision 3 s plus tard. Résultat attendu : **17 assertions PASS**.
 
 ## Architecture (`godot_project/scripts/`)
 

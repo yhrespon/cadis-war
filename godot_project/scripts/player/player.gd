@@ -226,7 +226,7 @@ func _physics_process(delta: float) -> void:
 	if _rolling:
 		face_yaw = atan2(_roll_vel.x, _roll_vel.z)
 	elif shooting and controls_enabled:
-		face_yaw = yaw + PI
+		face_yaw = combat.melee_face if (combat.attack_timer > 0.0 and not is_nan(combat.melee_face)) else yaw + PI
 	elif speed_now > 0.3:
 		face_yaw = atan2(_move_dir.x, _move_dir.z)
 	gc.rotation.y = lerp_angle(gc.rotation.y, face_yaw, 1.0 - exp(-14.0 * delta))
@@ -237,6 +237,8 @@ func _update_aim(delta: float) -> void:
 	var def := combat.def
 	var want := controls_enabled and Input.is_action_pressed("aim") and def != null and not def.melee
 	aiming = want
+	if (def == null or def.melee) and touch != null:
+		touch.release_aim()
 	var tl := _base_len * (0.62 if aiming else 1.0)
 	spring.spring_length = lerpf(spring.spring_length, tl, 1.0 - exp(-10.0 * delta))
 	var tf := def.fov_aim if (aiming and def != null) else 70.0
@@ -316,8 +318,9 @@ func _handle_actions() -> void:
 			UIManager.toast("Gilet enfilé", Color(0.6, 0.8, 1), 1.2)
 	if _lock <= 0.0 and combat.ready_to_attack():
 		if Input.is_action_just_pressed("punch"):
-			var bat := combat.def != null and combat.def.melee
-			combat.melee_attack(combat.def.damage if bat else 15.0, 1.5, "punch")
+			var armed := combat.def != null and combat.def.melee
+			var anim := gc.melee_anim_for(combat.def.model) if armed else "punch"
+			combat.melee_attack(combat.def.damage if armed else 15.0, 1.5, anim)
 		elif Input.is_action_just_pressed("kick"):
 			combat.melee_attack(20.0, 1.7, "kick")
 	if Input.is_action_just_pressed("interact") and _target != null and is_instance_valid(_target):
@@ -325,8 +328,8 @@ func _handle_actions() -> void:
 
 func start_melee(anim: String) -> void:
 	_combat_t = 0.8
-	_lock = gc.duration(anim) * 0.85
-	face_yaw = yaw + PI
+	_lock = gc.duration(anim) * (0.7 if anim == "stab" else 0.85)
+	face_yaw = combat.melee_face if not is_nan(combat.melee_face) else yaw + PI
 	gc.rotation.y = face_yaw
 	if gc.tree_active:
 		gc.tree_travel(anim, true)
@@ -427,7 +430,7 @@ func enter_vehicle(v: Vehicle) -> void:
 	velocity = Vector3.ZERO
 	speed_now = 0.0
 	spring.add_excluded_object(v.get_rid())
-	spring.spring_length = 6.5 * clampf(_scale, 0.85, 1.0)
+	spring.spring_length = (11.0 if v.is_aircraft() else 6.5) * clampf(_scale, 0.85, 1.0)
 	_base_len = spring.spring_length
 	pitch = -0.28
 	gc.position = Vector3(0, -float(gc.manifest_entry["drive_seat"]["butt_y"]), -float(gc.manifest_entry["drive_seat"]["hips_z"]))
@@ -437,7 +440,7 @@ func enter_vehicle(v: Vehicle) -> void:
 	else:
 		gc.play("drive", 0.1)
 	if touch != null:
-		touch.set_context("vehicle")
+		touch.set_context("aircraft" if v.is_aircraft() else "vehicle")
 
 func _update_driving(delta: float) -> void:
 	var v := driving
@@ -454,10 +457,17 @@ func _update_driving(delta: float) -> void:
 		iv = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 		if touch != null and touch.move_vector.length() > 0.05:
 			iv = touch.move_vector
-	v.set_controls(-iv.y, iv.x, controls_enabled and Input.is_action_pressed("jump"))
+	var air := v.is_aircraft()
+	var lift := 0.0
+	if controls_enabled and air:
+		lift = (1.0 if Input.is_action_pressed("jump") else 0.0) - (1.0 if Input.is_action_pressed("crouch") else 0.0)
+	v.set_controls(-iv.y, iv.x, controls_enabled and not air and Input.is_action_pressed("jump"), lift)
 	_find_t = 0.0
 	if controls_enabled and Input.is_action_just_pressed("interact"):
-		exit_vehicle(false)
+		if air and v.global_position.y > 2.5 and not v.is_on_floor():
+			UIManager.toast("Posez l'appareil avant de sortir", Color(1, 0.7, 0.3), 1.5)
+		else:
+			exit_vehicle(false)
 
 func exit_vehicle(forced: bool) -> void:
 	var v := driving
@@ -467,7 +477,7 @@ func exit_vehicle(forced: bool) -> void:
 	if is_instance_valid(v):
 		spring.remove_excluded_object(v.get_rid())
 		v.set_driver(null)
-		var side := v.global_transform.basis.x * 1.7
+		var side := v.global_transform.basis.x * (v.def.size.x * 0.5 + 1.2)
 		global_transform = Transform3D(Basis.IDENTITY, v.global_position + side + Vector3(0, 0.3, 0))
 		face_yaw = v.global_rotation.y
 	else:

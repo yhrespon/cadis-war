@@ -62,6 +62,9 @@ func snapshot(player: Node = null) -> Dictionary:
 		"secret_best_score": GameManager.secret_best_score,
 		"inventory": InventoryManager.to_dict(),
 		"missions": MissionManager.to_dict(),
+		"world_hour": GameManager.world_hour,
+		"world_weather": GameManager.world_weather,
+		"wanted": CrimeManager.wanted_level(),
 		"has_world": false,
 	}
 	if player != null and is_instance_valid(player):
@@ -130,13 +133,15 @@ func autosave_if_playing() -> void:
 ## Applique la partie « profil » (tout sauf la position, restaurée par la scène de jeu via pending_load).
 func apply_profile(d: Dictionary) -> void:
 	GameManager.money = int(d.get("money", 300))
-	GameManager.character_id = str(d.get("character_id", "homme_barbu"))
+	GameManager.character_id = GameManager.resolve_character_id(str(d.get("character_id", "mx_remy")))   # anciens id (v15) -> modèle actif du même genre
 	GameManager.current_city = str(d.get("city", "port_alpha"))
 	GameManager.unlocked_cities = Array(d.get("unlocked_cities", ["port_alpha"]))
 	GameManager.play_time = float(d.get("play_time", 0.0))
 	GameManager.kills = int(d.get("kills", 0))
 	GameManager.deaths = int(d.get("deaths", 0))
 	GameManager.secret_best_score = int(d.get("secret_best_score", 0))
+	GameManager.world_hour = float(d.get("world_hour", 10.0))
+	GameManager.world_weather = str(d.get("world_weather", "clear"))
 	InventoryManager.from_dict(Dictionary(d.get("inventory", {})))
 	MissionManager.from_dict(Dictionary(d.get("missions", {})))
 	GameManager.money_changed.emit(GameManager.money)

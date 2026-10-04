@@ -1,12 +1,20 @@
-; Projet Godot 4.3 - C.A.D.I.S WARS v13 (chargement et scènes smoke-testés ; voir README_PROGRESSION.md)
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
 
 [application]
+
 config/name="C.A.D.I.S WARS"
 config/description="C.A.D.I.S WARS : jeu d'action 3D Android (Godot 4.3, GDScript)"
 run/main_scene="res://main_menu.tscn"
-config/features=PackedStringArray("4.3", "Mobile")
 config/quit_on_go_back=false
+config/features=PackedStringArray("4.3", "Mobile")
 boot_splash/show_image=false
 config/icon="res://icons/icon.png"
 
@@ -18,11 +26,14 @@ GameManager="*res://scripts/autoload/game_manager.gd"
 InventoryManager="*res://scripts/autoload/inventory_manager.gd"
 WeaponManager="*res://scripts/autoload/weapon_manager.gd"
 VehicleManager="*res://scripts/autoload/vehicle_manager.gd"
+CrimeManager="*res://scripts/autoload/crime_manager.gd"
 NPCManager="*res://scripts/autoload/npc_manager.gd"
 WorldManager="*res://scripts/autoload/world_manager.gd"
 MissionManager="*res://scripts/autoload/mission_manager.gd"
 SaveManager="*res://scripts/autoload/save_manager.gd"
 UIManager="*res://scripts/autoload/ui_manager.gd"
+VoiceManager="*res://scripts/autoload/voice_manager.gd"
+OnlineManager="*res://scripts/autoload/online_manager.gd"
 
 [display]
 
@@ -30,7 +41,10 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/handheld/orientation=0
+
+[dotnet]
+
+project/assembly_name="C.A.D.I.S WARS"
 
 [layer_names]
 
@@ -41,14 +55,8 @@ window/handheld/orientation=0
 3d_physics/layer_5="vehicle"
 3d_physics/layer_6="pickup"
 
-[physics]
-
-common/physics_ticks_per_second=60
-
 [rendering]
 
 renderer/rendering_method="mobile"
-renderer/rendering_method.mobile="mobile"
 textures/vram_compression/import_etc2_astc=true
-anti_aliasing/quality/msaa_3d=0
 lights_and_shadows/directional_shadow/size=2048

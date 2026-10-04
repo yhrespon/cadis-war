@@ -8,7 +8,7 @@ const MODES := ["story", "secret", "test"]
 
 var manifest: Dictionary = {}
 var money := 300
-var character_id := "homme_barbu"
+var character_id := "mx_remy"
 var current_city := "port_alpha"
 var unlocked_cities: Array = ["port_alpha"]
 var play_time := 0.0
@@ -19,6 +19,8 @@ var pending_load: Dictionary = {}     # état à restaurer à l'entrée dans gam
 var secret_best_score := 0
 var in_game := false
 var paused := false
+var world_hour := 10.0               # heure de jeu (0..24), pilotée par EnvironmentController
+var world_weather := "clear"         # clear | cloudy | rain | storm | fog
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -30,17 +32,42 @@ func _process(delta: float) -> void:
 	if in_game and not paused:
 		play_time += delta
 
-func character_ids() -> Array:
+## Personnages actifs : les 4 modèles Mixamo (humains). Les 10 anciens (« legacy ») ne sont proposés que si manifest["use_legacy"] = true.
+func _active_characters() -> Array:
+	var use_legacy := bool(manifest.get("use_legacy", false))
 	var out: Array = []
 	for c in manifest["characters"]:
+		if use_legacy or not bool(c.get("legacy", false)):
+			out.append(c)
+	if out.is_empty():
+		return manifest["characters"]
+	return out
+
+func character_ids() -> Array:
+	var out: Array = []
+	for c in _active_characters():
 		out.append(c["id"])
 	return out
 
+## Retourne l'entrée du manifest. Un identifiant ancien (sauvegarde v15 ou antérieure) ou inconnu est remplacé par un personnage actif
+## du même genre (repli déterministe) : jamais d'erreur ni de personnage manquant.
 func character_entry(id: String) -> Dictionary:
-	for c in manifest["characters"]:
+	var active := _active_characters()
+	for c in active:
 		if c["id"] == id:
 			return c
-	return manifest["characters"][0]
+	var gender := "m"
+	for c in manifest["characters"]:
+		if c["id"] == id:
+			gender = str(c.get("gender", "m"))
+	var same: Array = active.filter(func(c: Dictionary) -> bool: return str(c.get("gender", "m")) == gender)
+	if same.is_empty():
+		same = active
+	return same[absi(hash(id)) % same.size()]
+
+## Identifiant actif correspondant à `id` (après repli), à utiliser pour mettre à jour GameManager.character_id d'une vieille sauvegarde.
+func resolve_character_id(id: String) -> String:
+	return str(character_entry(id)["id"])
 
 func add_money(n: int) -> void:
 	money = maxi(0, money + n)
@@ -74,6 +101,9 @@ func new_game() -> void:
 	kills = 0
 	deaths = 0
 	pending_load = {}
+	world_hour = 10.0
+	world_weather = "clear"
+	CrimeManager.reset()
 	InventoryManager.reset()
 	MissionManager.reset()
 	VehicleManager.reset()

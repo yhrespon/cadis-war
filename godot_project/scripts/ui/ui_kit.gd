@@ -39,6 +39,7 @@ static func button(text: String, color := Color(0.18, 0.2, 0.26), height := 60.0
 	b.add_theme_stylebox_override("focus", style(color.lightened(0.1), GOLD, 3))
 	b.add_theme_stylebox_override("disabled", style(Color(0.12, 0.13, 0.16), Color(1, 1, 1, 0.06), 1))
 	b.add_theme_color_override("font_disabled_color", Color(0.5, 0.5, 0.55))
+	b.pressed.connect(func() -> void: AudioManager.play_ui("ui_select"))
 	return b
 
 ## Colonne défilante verticale (pas de défilement horizontal) ; retourne la VBox à remplir.

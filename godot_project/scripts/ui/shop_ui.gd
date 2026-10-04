@@ -96,6 +96,12 @@ func _row(d: ItemDef) -> Control:
 	if owned != "":
 		info.add_child(UIKit.label(owned, 18, Color(0.5, 1.0, 0.6)))
 	h.add_child(UIKit.label("%d $" % d.price, 24, UIKit.GOLD, false))
+	if d.id == "heal_kit" and int(InventoryManager.items.get(d.id, 0)) > 0:
+		var use := UIKit.button("Activer", Color(0.15, 0.3, 0.4), 60.0)
+		use.custom_minimum_size = Vector2(150, 60)
+		use.disabled = not GameManager.in_game
+		use.pressed.connect(_activate_heal)
+		h.add_child(use)
 	var act := _action_button(d)
 	act.custom_minimum_size = Vector2(190, 60)
 	h.add_child(act)
@@ -131,6 +137,14 @@ func _action_button(d: ItemDef) -> Button:
 				InventoryManager.equip_clothing(d.category, d.id)
 			_after_action())
 	return buy
+
+func _activate_heal() -> void:
+	var pl := get_tree().get_first_node_in_group("player")
+	if pl != null and InventoryManager.use_heal(pl):
+		UIManager.toast("Soin activé", Color(0.5, 1, 0.5), 1.2)
+		_after_action()
+	else:
+		UIManager.toast("Santé déjà au maximum", Color(1, 0.8, 0.4), 1.2)
 
 func _after_action() -> void:
 	if GameManager.in_game:

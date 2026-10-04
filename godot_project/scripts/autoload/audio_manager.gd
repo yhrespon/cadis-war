@@ -35,6 +35,7 @@ func _ready() -> void:
 		_pool2d.append(p2)
 	_music = AudioStreamPlayer.new()
 	add_child(_music)
+	_music.finished.connect(func() -> void: _music.play())      # boucle de secours si le fichier n'a pas de marqueur de boucle
 
 ## group : master | music | sfx | voice (valeur linéaire 0..1). "ui" suit sfx.
 func set_group_volume(group: String, v: float) -> void:

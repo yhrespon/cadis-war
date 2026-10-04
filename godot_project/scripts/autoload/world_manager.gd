@@ -61,6 +61,10 @@ func load_city(id: String, parent: Node3D) -> bool:
 	entities.name = "Entities"
 	parent.add_child(entities)
 	CityBuilder.build_ground(city, root, city_extent())
+	var signal_network := TrafficSignalNetwork.new()
+	signal_network.name = "TrafficSignalNetwork"
+	signal_network.configure(city)
+	root.add_child(signal_network)
 	GameManager.current_city = id
 	city_loaded.emit(id)
 	return true
@@ -110,10 +114,12 @@ func _load_sector(b: Vector2i) -> void:
 func _spawn_parked_cars(b: Vector2i, n: Node3D) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = city.seed_value * 7919 + b.x * 131 + b.y * 17
-	var ids: Array = VehicleManager.def_ids()
+	var ids: Array = VehicleManager.def_ids().filter(func(i: Variant) -> bool: return i != "truck" and i != "plane" and i != "heli")
+	if rng.randf() < 0.06:
+		ids = ["heli"] if rng.randf() < 0.5 else ["plane"]       # rares : un hélicoptère / un avion garés
 	if ids.is_empty():
 		return
-	var lane := city.block_size * 0.5 + 2.1 + 1.7      # centre de la voie côté trottoir (bord de bloc + trottoir + demi-voie)
+	var lane := city.block_size * 0.5 + 2.1 + 0.55     # v17 : contre la bordure (le trafic roule sur la voie à 1,1 m de l'axe de la route)
 	var count := 1 + (rng.randi() % 2)
 	for i in count:
 		var side := -1.0 if rng.randf() < 0.5 else 1.0

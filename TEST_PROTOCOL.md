@@ -1,4 +1,4 @@
-# Protocole de test — C.A.D.I.S WARS v13 (Godot 4.3 + appareil Android)
+# Protocole de test — C.A.D.I.S WARS v17 (Godot 4.3 + appareil Android)
 Les contrôles statiques, l’import/chargement, les trois smoke-tests desktop et les assertions de personnages indiqués dans `docs/COMPTE_RENDU_ANALYSE_v13.md` ont été exécutés ; le parcours interactif reste à dérouler.
 Légende : noter pour chaque ligne [FAIT] / [À CORRIGER] / [BLOQUÉ] + la sortie console.
 
@@ -7,6 +7,7 @@ Légende : noter pour chaque ligne [FAIT] / [À CORRIGER] / [BLOQUÉ] + la sorti
 2. `godot --headless --path godot_project --import` puis `godot --headless --path godot_project --quit` : corriger TOUTE erreur de parse/chargement, une par une.
 3. À vérifier en priorité : noms d'os après import (`mixamorig:` vs `mixamorig_`), filtre de l'OneShot, API AnimationTree 4.3, arme dans la main, siège voiture,
    `static var` (BasePanel._active / CityBuilder), `PhysicsShapeQueryParameters3D`, `Callable` en lambdas multi-lignes.
+4. Test ciblé v17 : `godot --path godot_project res://tests/traffic_integration.tscn` (adapter le nom du binaire à Godot 4.3). Il vérifie les phases des feux, l’apparition et le déplacement du trafic secret, l’arrêt au rouge, puis le mode fantôme après 7 s et la restauration des collisions après 3 s ; résultat attendu : **17 assertions PASS**.
 
 ## Parcours complet (étape 10 du plan)
 | # | Action | Attendu |

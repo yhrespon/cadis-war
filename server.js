@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || '0.0.0.0';
 
-const MAX_PLAYERS = 8;
+const MAX_PLAYERS = 6;
 const ROOM_CODE_LENGTH = 6;
 const ROOM_TTL_MS = 30 * 60 * 1000;
 const MAX_MESSAGE_SIZE = 64 * 1024;
@@ -19,6 +19,8 @@ const app = Fastify({
 });
 
 const rooms = new Map();
+const profiles = new Map();
+const clans = new Map();
 
 function makeRoomCode() {
   let code;
@@ -51,7 +53,7 @@ function sanitizeName(name) {
   return clean || 'Player';
 }
 
-function createRoom(hostName) {
+function createRoom(hostName, mode = 'campaign', maxPlayers = 6) {
   const code = makeRoomCode();
   const hostId = makePlayerId();
 
@@ -60,6 +62,8 @@ function createRoom(hostName) {
     createdAt: Date.now(),
     lastActivity: Date.now(),
     hostId,
+    mode: ['campaign', 'team_duel', 'solo_duel'].includes(mode) ? mode : 'campaign',
+    maxPlayers: Math.max(2, Math.min(6, Number(maxPlayers) || 6)),
     started: false,
     players: new Map()
   };
@@ -84,7 +88,8 @@ function createRoom(hostName) {
 function roomToJSON(room) {
   return {
     code: room.code,
-    maxPlayers: MAX_PLAYERS,
+    maxPlayers: room.maxPlayers || MAX_PLAYERS,
+    mode: room.mode || 'campaign',
     started: room.started,
     players: [...room.players.values()].map((player) => ({
       id: player.id,
@@ -209,8 +214,10 @@ async function start() {
   app.post('/rooms', async (request, reply) => {
     const body = request.body || {};
     const hostName = sanitizeName(body.name);
+    const mode = String(body.mode || 'campaign');
+    const maxPlayers = body.maxPlayers;
 
-    const { room, player } = createRoom(hostName);
+    const { room, player } = createRoom(hostName, mode, maxPlayers);
 
     return reply.code(201).send({
       success: true,
@@ -248,7 +255,7 @@ async function start() {
       });
     }
 
-    if (room.players.size >= MAX_PLAYERS) {
+    if (room.players.size >= (room.maxPlayers || MAX_PLAYERS)) {
       return reply.code(409).send({
         success: false,
         error: 'ROOM_FULL'
@@ -389,6 +396,44 @@ async function start() {
             timestamp: Date.now()
           });
           break;
+
+        case 'result': {
+          const profile = profiles.get(playerId) || {
+            name: player.name,
+            wins: 0,
+            losses: 0,
+            rewards: 0
+          };
+          if (message.won) profile.wins += 1;
+          else profile.losses += 1;
+          profile.rewards += Number(message.reward) || (message.won ? 100 : 25);
+          profiles.set(playerId, profile);
+          const ranking = [...profiles.values()]
+            .sort((a, b) => b.wins - a.wins || b.rewards - a.rewards)
+            .slice(0, 50);
+          send(socket, { type: 'profile', profile, leaderboard: ranking });
+          break;
+        }
+
+        case 'clan_create': {
+          const tag = String(message.tag || '')
+            .toUpperCase()
+            .replace(/[^A-Z0-9]/g, '')
+            .slice(0, 5);
+          if (!tag || clans.has(tag)) {
+            send(socket, { type: 'error', error: 'CLAN_TAG_INVALID_OR_TAKEN' });
+            break;
+          }
+          const clan = {
+            tag,
+            name: String(message.name || 'Clan').slice(0, 24),
+            ownerId: playerId,
+            members: [playerId]
+          };
+          clans.set(tag, clan);
+          send(socket, { type: 'clan', clan });
+          break;
+        }
 
         case 'ready': {
           if (room.started) return;

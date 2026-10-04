@@ -16,7 +16,7 @@ func register(n: Node) -> void:
 		n.tree_exited.connect(func() -> void: npcs.erase(n))
 
 func max_enemies() -> int:
-	return int(round(22.0 * SettingsManager.npc_density()))
+	return int(round(10.0 * SettingsManager.npc_density()))
 
 func max_civilians(city: CityDef) -> int:
 	return int(round(float(city.civilians) * SettingsManager.npc_density()))
@@ -43,11 +43,11 @@ func _physics_process(delta: float) -> void:
 			continue
 		var d: float = n.global_position.distance_to(pp)
 		var lod := 0
-		if d > 95.0:
+		if d > 60.0:
 			lod = 3
-		elif d > 55.0:
+		elif d > 38.0:
 			lod = 2
-		elif d > 25.0:
+		elif d > 18.0:
 			lod = 1
 		if n.get("ai_lod") != lod:
 			n.set("ai_lod", lod)

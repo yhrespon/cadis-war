@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/defs/weapon_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "dagger"
+display_name = "Poignard"
+model = "dagger"
+melee = true
+damage = 30.0
+rate = 1.0
+range_m = 1.5
+mag_size = 0
+ammo_type = ""
+noise_radius = 4.0
+price = 0

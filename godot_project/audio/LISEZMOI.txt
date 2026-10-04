@@ -1,6 +1,6 @@
-Dossier audio : AUCUN fichier son n'est fourni (pas de faux fichiers). Le jeu est silencieux tant qu'ils manquent.
-Déposez ici des .ogg/.wav/.mp3 avec ces noms (cherchés automatiquement) :
- Musiques : music_menu, music_explore, music_combat
- Tirs : shot_pistol, shot_smg, shot_shotgun, shot_enemy   | Recharge : reload | Mêlée : melee_swing, melee_hit
- Impacts : impact_flesh, impact_world | Pas : step | Véhicules : engine_loop, car_crash, car_horn
- UI : ui_move, ui_select, ui_back, ui_buy, ui_mission | Dialogues : voice_* (non utilisés pour l'instant)
+Dossier audio (v14) : sons et musiques SYNTHÉTISÉS par tools/gen_audio.py (numpy, aucun échantillon tiers, libres de droits).
+Ce sont des sons de remplacement fonctionnels, pas des enregistrements professionnels.
+Pour les améliorer : déposez ici un .ogg/.wav/.mp3 de même nom (le jeu cherche .ogg, puis .wav, puis .mp3).
+Noms : music_menu, music_explore, music_combat | shot_pistol, shot_smg, shot_shotgun, shot_enemy | reload | melee_swing, melee_hit
+       impact_flesh, impact_world | step | engine_loop, car_crash, car_horn | ui_move, ui_select, ui_back, ui_buy, ui_mission
+Régénérer : python3 tools/gen_audio.py
