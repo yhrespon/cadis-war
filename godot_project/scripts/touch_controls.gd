@@ -6,6 +6,7 @@ extends CanvasLayer
 
 const STICK_RADIUS := 110.0
 const BTN_RADIUS := 56.0
+const MOVE_DEADZONE := 0.12
 
 var move_vector := Vector2.ZERO
 var context := "foot"
@@ -186,6 +187,8 @@ func _input(ev: InputEvent) -> void:
 		if d.index == _stick_id:
 			_stick_pos = d.position
 			move_vector = ((_stick_pos - _stick_origin) / STICK_RADIUS).limit_length(1.0)
+			if move_vector.length() < MOVE_DEADZONE:
+				move_vector = Vector2.ZERO
 		elif d.index == _look_id:
 			_look_delta += d.relative
 		_canvas.queue_redraw()

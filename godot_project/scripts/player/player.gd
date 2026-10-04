@@ -10,7 +10,9 @@ signal prompt_changed(text: String)
 
 const GRAVITY := 20.0
 const JUMP_SPEED := 5.4
-const ACCEL := 16.0
+const ACCEL := 24.0
+const DECEL := 34.0
+const MOVE_DEADZONE := 0.12
 
 @export var character_id := ""          # vide = GameManager.character_id
 
@@ -165,8 +167,14 @@ func _physics_process(delta: float) -> void:
 	var iv := Vector2.ZERO
 	if controls_enabled:
 		iv = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-		if touch != null and touch.move_vector.length() > 0.05:
+		if touch != null and touch.move_vector.length() > MOVE_DEADZONE:
 			iv = touch.move_vector
+		elif touch != null and touch.move_vector.length() <= MOVE_DEADZONE:
+			iv = Vector2.ZERO
+	if iv.length() <= MOVE_DEADZONE:
+		iv = Vector2.ZERO
+	else:
+		iv = iv.limit_length(1.0)
 	var mag := iv.length()
 
 	if _rolling:
@@ -190,7 +198,10 @@ func _physics_process(delta: float) -> void:
 			_move_dir = (Basis(Vector3.UP, yaw) * Vector3(iv.x, 0, iv.y)).normalized()
 		if _lock > 0.0 and not _rolling:
 			target *= 0.3
-		speed_now = move_toward(speed_now, target, ACCEL * delta)
+		var change_rate := ACCEL if target > speed_now else DECEL
+		speed_now = move_toward(speed_now, target, change_rate * delta)
+		if target <= 0.0 and speed_now < 0.03:
+			speed_now = 0.0
 		velocity.x = _move_dir.x * speed_now
 		velocity.z = _move_dir.z * speed_now
 

@@ -59,4 +59,4 @@ project/assembly_name="C.A.D.I.S WARS"
 
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
-lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/directional_shadow/size=1024

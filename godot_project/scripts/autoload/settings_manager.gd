@@ -9,7 +9,7 @@ const QUALITIES: Array = ["Auto", "Low", "Medium", "High", "Ultra"]
 
 const PRESETS := {
 	"Low":    {"res_scale": 0.6,  "shadows": false, "view_distance": 70.0,  "effects": false, "lod": 0.5, "textures": 2, "fps": 30},
-	"Medium": {"res_scale": 0.8,  "shadows": false, "view_distance": 100.0, "effects": true,  "lod": 0.8, "textures": 1, "fps": 45},
+	"Medium": {"res_scale": 0.7,  "shadows": false, "view_distance": 90.0,  "effects": false, "lod": 0.65, "textures": 2, "fps": 30},
 	"High":   {"res_scale": 1.0,  "shadows": true,  "view_distance": 130.0, "effects": true,  "lod": 1.0, "textures": 0, "fps": 60},
 	"Ultra":  {"res_scale": 1.0,  "shadows": true,  "view_distance": 180.0, "effects": true,  "lod": 1.3, "textures": 0, "fps": 60},
 }
@@ -74,7 +74,7 @@ func set_value(section: String, key: String, value: Variant) -> void:
 func _auto_quality() -> String:
 	if not OS.has_feature("mobile"):
 		return "High"
-	return "Medium"      # v18 : sur mobile on démarre en Medium (modifiable dans Réglages)
+	return "Low"        # Android : priorité à une réponse stable avant la qualité visuelle
 
 func _apply_preset(q: String) -> void:
 	var name := _auto_quality() if q == "Auto" else q
@@ -136,7 +136,7 @@ func apply_to_scene() -> void:
 		cam.far = float(g["view_distance"]) + 40.0
 	var vp := get_viewport()
 	vp.mesh_lod_threshold = 4.0 if float(g["view_distance"]) <= 100.0 else 2.5     # v18 : modèles simplifiés plus tôt (LOD auto des .glb)
-	WorldManager.load_radius = 1 if float(g["view_distance"]) <= 100.0 else 2       # v18 : moins de secteurs de ville chargés
+	WorldManager.load_radius = 1 if float(g["view_distance"]) <= 110.0 else 2       # Android : 9 secteurs maximum en qualité basse/moyenne
 	if "texture_mipmap_bias" in vp:
 		vp.set("texture_mipmap_bias", float(g["textures"]) * 0.75)
 

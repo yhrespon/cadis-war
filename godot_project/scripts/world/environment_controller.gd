@@ -71,10 +71,11 @@ func _build() -> void:
 	_env.sky = sky
 	_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	_env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	_env.fog_enabled = true
+	var effects_enabled := bool(SettingsManager.get_value("graphics", "effects"))
+	_env.fog_enabled = effects_enabled
 	_env.fog_light_color = Color(0.7, 0.75, 0.82)
 	_env.fog_density = 0.0015
-	_env.glow_enabled = true
+	_env.glow_enabled = effects_enabled
 	_env.glow_intensity = 0.5
 	_env.glow_bloom = 0.0
 	_env.glow_hdr_threshold = 1.1
@@ -90,7 +91,7 @@ func _build() -> void:
 
 	_rain = GPUParticles3D.new()
 	_rain.name = "Rain"
-	_rain.amount = 900
+	_rain.amount = 600 if effects_enabled else 180
 	_rain.lifetime = 0.9
 	_rain.preprocess = 0.9
 	_rain.visibility_aabb = AABB(Vector3(-22, -14, -22), Vector3(44, 28, 44))
