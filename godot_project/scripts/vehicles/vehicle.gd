@@ -65,6 +65,9 @@ func _box(size: Vector3, pos: Vector3, c: Color, translucent := false) -> MeshIn
 	m.albedo_color = c
 	if translucent:
 		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		# Les surfaces transparentes coûtent déjà plus cher ; elles ne projettent
+		# pas d'ombre utile sur les véhicules procéduraux.
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mi)
 	mi.material_override = m
 	return mi

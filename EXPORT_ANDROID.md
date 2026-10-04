@@ -1,35 +1,64 @@
-# Export Android — C.A.D.I.S WARS v13 (Godot 4.3)
+# Export Android — C.A.D.I.S WARS v0.17.0 (Godot 4.3)
 
-## Résultat de la tentative locale
+## Résultat de l’export local
 
-Les modèles d’export Android Godot 4.3 et une clé de debug temporaire ont été installés, puis l’export debug tenté. Godot a refusé l’export faute de chemins SDK valides :
+L’environnement Android a été installé et configuré :
 
-```text
-A valid Java SDK path is required in Editor Settings (Android > Java SDK Path).
-A valid Android SDK path is required in Editor Settings (Android > Android SDK Path).
+- Godot `4.3.stable.official.77dcf97d8`
+- JDK 17 (`17.0.20.1`)
+- Android SDK Platform 34
+- Android SDK Build-Tools 34.0.0
+- Android Platform-Tools 37.0.1
+- Templates d’export Godot 4.3
+
+Commande utilisée :
+
+```bash
+source ~/godot-workspace/android-env.sh
+cd godot_project
+godot --headless --path . --export-debug Android build/cadis_wars.apk
 ```
 
-**Aucun APK local n’a été produit.** L’environnement de test n’a pas de JDK 17 / Android SDK configuré. La clé temporaire créée pour le test est exclue des livrables.
+APK généré : `godot_project/build/cadis_wars.apk`
 
-## Export local avec un environnement configuré
+- Taille : environ 73 Mo
+- SHA-256 : `0c49ba02b1e26587227c12f85e07566189179a778d0b62c5beb07ccd2599a103`
+- Package : `com.cadis.wars`
+- Version code : `17`
+- Version name : `0.17.0`
+- Compile SDK : 34
+- Target SDK : 34
+- Minimum SDK : 21
+- Architecture : `arm64-v8a`
+- Signature : debug Godot, vérifiée avec `apksigner`
+- Permissions : Internet et vibration
 
-1. Installer les modèles d’export Godot 4.3, le **JDK 17** et le **SDK Android** (API 34 + outils de ligne de commande).
-2. Dans Godot : `Editor > Editor Settings > Export > Android`, définir *Android SDK Path* et *Java SDK Path*.
-3. Importer `godot_project/project.godot` et corriger toute erreur du journal ; consulter [TEST_PROTOCOL.md](TEST_PROTOCOL.md), phase 0.
-4. Utiliser le preset **Android** : `arm64-v8a`, version code 13, version name 0.13.0, paysage/immersif, permission vibration.
-5. Pour l’installation : `adb install build/cadis_wars.apk` (uniquement après export réussi et vérification sur appareil).
+Vérification effectuée :
 
-Variables reconnues par Godot 4.3 : `GODOT_ANDROID_KEYSTORE_DEBUG_PATH|USER|PASSWORD` et `GODOT_ANDROID_KEYSTORE_RELEASE_PATH|USER|PASSWORD`. Les variables debug ne sont définies que dans l’étape debug, car Godot peut refuser l’export release si elles restent définies.
+```text
+Verifies
+Verified using v1 scheme (JAR signing): true
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+```
 
-## GitHub Actions (`.github/workflows/export-apk.yml`)
+L’APK debug n’est pas ajouté au dépôt Git car `build/` et `*.apk` sont ignorés par `.gitignore`. Il reste disponible comme artefact local ; le dépôt contient les sources et la configuration permettant de le reconstruire.
 
-- Push/PR : contrôles statiques et données, import des ressources, chargement des scripts, export Android debug et artefact `cadis_wars-debug-apk`.
-- Tag `v*` ou lancement manuel `release=true` : export release, secrets requis : `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_USER` (alias) et `RELEASE_KEYSTORE_PASSWORD`.
-- Le workflow échoue maintenant si l’import échoue (l’erreur n’est plus masquée par `|| true`) et contrôle les messages de parse/chargement. L’injection des champs de keystore utilise Python pour que les valeurs contenant `@` ne cassent pas le preset.
-- Run 37125564277 : le démarrage headless a déclenché un faux positif du renderer dummy (`ERROR: Parameter "m" is null.`), pas une erreur GDScript ; aucun APK n’a été exporté lors de ce premier essai.
-- Run 37125744583 : succès après correction du filtre. L’import Godot, la vérification script/chargement, l’export debug et l’upload d’artefact ont tous passé.
-- Artefact téléchargé et vérifié : `cadis_wars-debug.apk`, 49 Mo, SHA-256 `6d74754f82b0a8a754252eee1691547b522062f9b065fd75244452e76d5e761b`. Il s’agit d’un APK debug ; aucune installation sur appareil ni validation de release n’a été faite.
+## Installation sur un appareil Android
 
-## Limites et publication
+Après connexion d’un appareil autorisant le débogage USB :
 
-Pas d’AAB/Gradle personnalisé ni de signature Play App Signing. Le package `com.cadis.wars` est cohérent dans le preset. Les icônes sont encore provisoires. Ne jamais committer un keystore ou ses mots de passe ; ne pas utiliser les secrets release pour une clé de debug.
+```bash
+adb devices
+adb install -r godot_project/build/cadis_wars.apk
+```
+
+Aucun appareil Android n’était connecté dans cette session : l’installation et le test tactile sur matériel réel restent donc à effectuer.
+
+## GitHub Actions
+
+Le workflow `.github/workflows/export-apk.yml` peut également produire un artefact `cadis_wars-debug-apk`. Les exports release nécessitent une configuration de signature séparée ; aucun keystore privé ni mot de passe n’est commité.
+
+## Publication
+
+Cet APK est un build **debug**, pas une version destinée au Play Store. Pour une publication, il faudra générer un AAB ou un APK release avec un keystore privé conservé hors du dépôt et configurer Play App Signing.

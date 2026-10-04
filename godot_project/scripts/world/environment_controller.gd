@@ -13,6 +13,8 @@ const WEATHER_LABEL := {"clear": "Ensoleillé", "cloudy": "Nuageux", "rain": "Pl
 const DAY_SECONDS := 720.0           # 12 minutes réelles = 24 h de jeu
 const WEATHER_MIN := 150.0           # durée mini d'une météo (s)
 const WEATHER_MAX := 330.0
+const MAX_ACTIVE_HEADLIGHTS := 4      # renderer Mobile : garder peu de spots simultanés
+const VEHICLE_SHADOW_DISTANCE := 34.0 # les voitures lointaines restent éclairées sans ombre dynamique
 
 # profils [ciel haut, horizon, soleil, énergie soleil, ambiant, énergie ambiante] par plage horaire
 const KEYS: Array = [
@@ -316,7 +318,31 @@ func _headlight_t_tick() -> void:
 func _update_headlights() -> void:
 	var on := night_factor() > 0.35 or _cur_rain > 0.4 or _cur_fog > 0.5
 	var cam := get_viewport().get_camera_3d()
+	var candidates: Array = []
 	for n in get_tree().get_nodes_in_group("headlight"):
 		var l := n as Light3D
 		if l != null:
-			l.visible = on and (cam == null or l.global_position.distance_to(cam.global_position) < 45.0)
+			var distance := l.global_position.distance_to(cam.global_position) if cam != null else 0.0
+			if on and (cam == null or distance < 45.0):
+				candidates.append([distance, l])
+			else:
+				l.visible = false
+	candidates.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	for i in candidates.size():
+		(candidates[i][1] as Light3D).visible = i < MAX_ACTIVE_HEADLIGHTS
+	_update_vehicle_shadows(cam)
+
+func _update_vehicle_shadows(cam: Camera3D) -> void:
+	var shadows := bool(SettingsManager.get_value("graphics", "shadows"))
+	for n in get_tree().get_nodes_in_group("vehicle"):
+		var vehicle := n as Node3D
+		if vehicle == null:
+			continue
+		var near := cam == null or vehicle.global_position.distance_to(cam.global_position) <= VEHICLE_SHADOW_DISTANCE
+		_set_vehicle_shadow_state(vehicle, shadows and near)
+
+func _set_vehicle_shadow_state(node: Node, enabled: bool) -> void:
+	for child in node.get_children():
+		if child is GeometryInstance3D:
+			(child as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if enabled else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_set_vehicle_shadow_state(child, enabled)

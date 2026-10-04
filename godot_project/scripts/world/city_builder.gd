@@ -108,6 +108,13 @@ class Batch extends RefCounted:
 		mi.mesh = mesh
 		if range_end > 0.0:
 			mi.visibility_range_end = range_end
+			mi.visibility_range_end_margin = 8.0
+			# Accessoires, fenêtres et arbres : pas de contribution à la shadow map.
+			# Le mesh principal des bâtiments conserve les ombres directionnelles.
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		elif node_name == "RoadMarkings":
+			# Marquages presque coplanaires : aucun bénéfice visuel à les projeter.
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		parent.add_child(mi)
 		return mi
 
