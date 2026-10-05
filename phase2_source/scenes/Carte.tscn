@@ -1,0 +1,6 @@
+[gd_scene format=3]
+[node name="Carte" type="Control"]
+[node name="Label" type="Label" parent="."]
+offset_left = 50.0
+offset_top = 50.0
+text = "CARTE - Ville=QG robots / Maisons=ghetto / Routes=chasse / Zones Militaires=Coeur"

@@ -1,0 +1,16 @@
+TITRE: CADIS WAR ZONE - Revolte des Robots
+ANNEE: 2038
+SERVEUR: https://arcadiax.up.railway.app/
+ORIGINE: 2032 humains remplacent ouvriers par robots ARC. Bug serveur 2038 robots conscients veulent liberte.
+HEROS: Spectre 07 mi-humain mi-robot, oeil rouge.
+ZONES:
+VILLE=QG robots UNITE-01 controle serveur central
+MAISONS=ghetto humains caches
+ROUTES=zone chasse Convoi 9 robots chasseurs
+ZONES MILITAIRES=Le Coeur reacteur final
+CHAPITRES:
+CHAP0 Le Ping tutoriel deplacement/tir OFFLINE_LOCAL
+CHAP1 VILLE L'Eveil boss drone humain
+CHAP2 MAISONS choix aider humains (debloque Vetements) ou robots OFFLINE_LOCAL
+CHAP3 ROUTES sauver convoi robots choix moral
+CHAP4 ZONES MILITAIRES frere devient UNITE-01 choix final Liberer robots ou Eteindre robots ONLINE_ONLY via arcadiax.up.railway.app

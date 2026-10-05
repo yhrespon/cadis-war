@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://scenes/Lobby.gd" id="1"]
+[node name="Lobby" type="Control"]
+script = ExtResource("1")
+anchor_right = 1.0
+anchor_bottom = 1.0
+[node name="CodeLabel" type="Label" parent="."]
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 400.0
+offset_bottom = 80.0
+text = "CODE SALON: NONE"
+[node name="JoinInput" type="LineEdit" parent="."]
+offset_left = 50.0
+offset_top = 100.0
+offset_right = 300.0
+offset_bottom = 130.0
+placeholder_text = "CADIS-XXXX"
+[node name="BtnCreer" type="Button" parent="."]
+offset_left = 50.0
+offset_top = 150.0
+offset_right = 250.0
+offset_bottom = 190.0
+text = "Creer Salon"
+[node name="BtnRejoindre" type="Button" parent="."]
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 250.0
+offset_bottom = 240.0
+text = "Rejoindre"
+[node name="SliderPlayers" type="HSlider" parent="."]
+offset_left = 50.0
+offset_top = 260.0
+offset_right = 250.0
+offset_bottom = 280.0
+min_value = 2.0
+max_value = 8.0
+value = 2.0
+[node name="IACheck" type="CheckBox" parent="."]
+offset_left = 50.0
+offset_top = 300.0
+offset_right = 200.0
+offset_bottom = 330.0
+text = "Ajouter IA"
+[node name="LabelInfo" type="Label" parent="."]
+offset_left = 50.0
+offset_top = 350.0
+offset_right = 700.0
+offset_bottom = 380.0
+text = "OFFLINE_LOCAL=local / ONLINE_ONLY=arcadiax.up.railway.app"
+[connection signal="pressed" from="BtnCreer" to="." method="_on_creer_salon_pressed"]
+[connection signal="pressed" from="BtnRejoindre" to="." method="_on_rejoindre_pressed"]
+[connection signal="value_changed" from="SliderPlayers" to="." method="_on_slider_value_changed"]
+[connection signal="toggled" from="IACheck" to="." method="_on_ia_toggled"]

@@ -1,0 +1,6 @@
+[gd_scene format=3]
+[node name="Profil" type="Control"]
+[node name="Label" type="Label" parent="."]
+offset_left = 50.0
+offset_top = 50.0
+text = "PROFIL - Personnage / Vetements / Apparence OFFLINE_LOCAL"
